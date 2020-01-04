@@ -1,0 +1,20 @@
+[] Publish first leap package onto PyPi
+  [X] Import RoBus into leap
+    [X] All Robus elements are renamed correctly
+    [X] Structure to support packaging
+  [] Implement fundamental codec changes
+    [] JSON formatting with _data arrays
+    [] Changes to _addr offsets
+    [] Remove settable stuff
+    [] Add "none" as a data _type
+
+[] Add reader module
+  [] Reads JSON config files
+  [] Verifies JSON Config files
+
+[] Add toml configuration
+
+
+
+
+

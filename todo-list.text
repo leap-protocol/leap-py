@@ -8,6 +8,8 @@
     [] Remove settable stuff
     [] Add "none" as a data _type
 
+[] Add sample JSON config file to root
+
 [] Add reader module
   [] Reads JSON config files
   [] Verifies JSON Config files

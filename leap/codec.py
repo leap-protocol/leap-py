@@ -13,19 +13,23 @@ class protocolKey:
 def count_depth(root):
   count = 0
 
-  for item in root:
-    count += 1
-    name = list(item.keys()).pop()
-    if protocolKey.DATA in item[name]:
-      count += count_depth(item[name][protocolKey.DATA])
+  if protocolKey.DATA in root:
+    data = root[protocolKey.DATA]
+    for item in data:
+      count += 1
+      name = list(item.keys()).pop()
+      if protocolKey.DATA in item[name]:
+        count += count_depth(item[name])
 
   return count
 
 
 def count_to_path(root, path):
 
-  if not isinstance(root, list):
+  if not protocolKey.DATA in root:
     return None
+  else:
+    data = root[protocolKey.DATA]
 
   count = 0
   if path == None:
@@ -33,7 +37,7 @@ def count_to_path(root, path):
 
   search = path[0]
 
-  for item in root:
+  for item in data:
     # Expect only one key value pair per data item
     key = list(item.keys()).pop()
     count += 1
@@ -41,10 +45,10 @@ def count_to_path(root, path):
       if protocolKey.TYPE in item[key]:
         continue
       else:
-        count += count_depth(item[key][protocolKey.DATA])
+        count += count_depth(item[key])
     else:
       if len(path) > 1:
-        incr = count_to_path(item[search][protocolKey.DATA], path[1:])
+        incr = count_to_path(item[search], path[1:])
         if (incr != None):
           count += incr
         else:
@@ -63,16 +67,18 @@ def path_from_count(root, count):
   if count <= 0:
     return ([], 0)
   else:
-    for item in root:
+    if not protocolKey.DATA in root:
+      return ([], 0)
+    else:
+      data = root[protocolKey.DATA]
+
+    for item in data:
       name = list(item.keys()).pop()
       count -= 1
       path[0] = name
       if protocolKey.TYPE not in item[name]:
-        if protocolKey.DATA in item[name]:
-          (npath, count) = path_from_count(item[name][protocolKey.DATA], count)
-          path = path + npath
-        else:
-          continue
+        (npath, count) = path_from_count(item[name], count)
+        path = path + npath
       if count == 0:
         break
     else:
@@ -84,15 +90,17 @@ def get_struct(root, path):
   if path == []:
     return root
 
-  for item in root:
+  if protocolKey.DATA in root:
+    data = root[protocolKey.DATA]
+  else:
+    return None
+
+  for item in data:
     if path[0] in item.keys():
       if len(path) == 1:
         return item[path[0]]
       else:
-        if protocolKey.DATA in item[path[0]]:
-          return get_struct(item[path[0]][protocolKey.DATA], path[1:])
-        else:
-          continue
+        return get_struct(item[path[0]], path[1:])
     else:
       continue
   else:
@@ -384,11 +392,10 @@ class Codec():
 
         for item in self.protocol[protocolKey.DATA]:
           if self.address_map[key] in item:
-            if protocolKey.DATA in item[self.address_map[key]]:
-              (path, count) = path_from_count(
-                item[self.address_map[key]][protocolKey.DATA],
-                diff
-              )
+            (path, count) = path_from_count(
+              item[self.address_map[key]],
+              diff
+            )
 
         if (count == 0):
           full_path = "/".join([self.address_map[key]] + path)

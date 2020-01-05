@@ -3,19 +3,21 @@ import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"
 
+countries_root = { "_data": [
+  { "NZ": { "_data": [
+    { "Auckland": { "_data": [
+      { "GlenInnes": { "_type": "u16"  } },
+      { "Avondale": { "_type": "float" } }
+    ] } },
+    { "Hamilton": {"_type": "u8"  } },
+    { "Napier": { "_type": "bool" } }
+  ] } },
+  { "Rarotonga": { "_type": "i32" } }
+] }
+
 class TestGetStruct():
   def setup_method(self):
-    self.root = [
-      { "NZ": { "_data": [
-        { "Auckland": { "_data": [
-          { "GlenInnes": { "_type": "u16"  } },
-          { "Avondale": { "_type": "float" } }
-        ] } },
-        { "Hamilton": {"_type": "u8"  } },
-        { "Napier": { "_type": "bool" } }
-      ] } },
-      { "Rarotonga": { "_type": "i32" } }
-    ]
+    self.root = countries_root
 
   def test_get_none(self):
     expected = None
@@ -51,7 +53,7 @@ class TestExtractTypes():
   def setup_method(self):
     protocol_file_path = CONFIG_PATH
     _codec = codec.Codec(protocol_file_path)
-    self.data = _codec.protocol["_data"]
+    self.data = _codec.protocol
 
   def test_simple_type(self):
     expected = ["bool"]
@@ -77,17 +79,7 @@ class TestExtractTypes():
 
 class TestCountToPath():
   def setup_method(self):
-    self.root = [
-      { "NZ": { "_data": [
-        { "Auckland": { "_data": [
-          { "GlenInnes": { "_type": "u16"  } },
-          { "Avondale": { "_type": "float" } }
-        ] } },
-        { "Hamilton": {"_type": "u8"  } },
-        { "Napier": { "_type": "bool" } }
-      ] } },
-      { "Rarotonga": { "_type": "i32" } }
-    ]
+    self.root = countries_root
 
   def test_none_counts_depth(self):
     expected = 7
@@ -126,17 +118,7 @@ class TestCountToPath():
 
 class TestPathFromCount():
   def setup_method(self):
-    self.root = [
-      { "NZ": { "_data": [
-        { "Auckland": { "_data": [
-          { "GlenInnes": { "_type": "u16"  } },
-          { "Avondale": { "_type": "float" } }
-        ] } },
-        { "Hamilton": {"_type": "u8"  } },
-        { "Napier": { "_type": "bool" } }
-      ] } },
-      { "Rarotonga": { "_type": "i32" } }
-    ]
+    self.root = countries_root
 
   def test_zero_counts(self):
     expected = []

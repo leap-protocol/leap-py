@@ -5,17 +5,17 @@ CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"
 
 class TestGetStruct():
   def setup_method(self):
-    self.root = { "_addr": "0000",
-      "NZ": {
-        "Auckland": {
-          "GlenInnes": { "_type": "u16" },
-          "Avondale": { "_type": "float"}
-        },
-        "Hamilton": {"_type": "u8" },
-        "Napier": { "_type": "bool" }
-      },
-      "Rarotonga": { "_type": "i32" }
-    }
+    self.root = [
+      { "NZ": { "_data": [
+        { "Auckland": { "_data": [
+          { "GlenInnes": { "_type": "u16"  } },
+          { "Avondale": { "_type": "float" } }
+        ] } },
+        { "Hamilton": {"_type": "u8"  } },
+        { "Napier": { "_type": "bool" } }
+      ] } },
+      { "Rarotonga": { "_type": "i32" } }
+    ]
 
   def test_get_none(self):
     expected = None
@@ -23,7 +23,7 @@ class TestGetStruct():
     assert(result == expected)
 
   def test_get_last(self):
-    expected = self.root["Rarotonga"]
+    expected = { "_type": "i32" }
     result = codec.get_struct(self.root, ["Rarotonga"])
     assert(result == expected)
 
@@ -33,12 +33,12 @@ class TestGetStruct():
     assert(result == expected)
 
   def test_get_deep(self):
-    expected = self.root["NZ"]["Auckland"]["Avondale"]
+    expected = { "_type": "float" }
     result = codec.get_struct(self.root, ["NZ", "Auckland", "Avondale"])
     assert(result == expected)
 
   def test_get_another(self):
-    expected = self.root["NZ"]["Napier"]
+    expected = { "_type": "bool" }
     result = codec.get_struct(self.root, ["NZ", "Napier"])
     assert(result == expected)
 
@@ -51,7 +51,7 @@ class TestExtractTypes():
   def setup_method(self):
     protocol_file_path = CONFIG_PATH
     _codec = codec.Codec(protocol_file_path)
-    self.data = _codec.protocol["data"]
+    self.data = _codec.protocol["_data"]
 
   def test_simple_type(self):
     expected = ["bool"]
@@ -77,17 +77,17 @@ class TestExtractTypes():
 
 class TestCountToPath():
   def setup_method(self):
-    self.root = { "_addr": "0000",
-      "NZ": {
-        "Auckland": {
-          "GlenInnes": { "_type": "u16" },
-          "Avondale": { "_type": "float" }
-        },
-        "Hamilton": {"_type": "u8" },
-        "Napier": { "_type": "bool" }
-      },
-      "Rarotonga": { "_type": "i32" }
-    }
+    self.root = [
+      { "NZ": { "_data": [
+        { "Auckland": { "_data": [
+          { "GlenInnes": { "_type": "u16"  } },
+          { "Avondale": { "_type": "float" } }
+        ] } },
+        { "Hamilton": {"_type": "u8"  } },
+        { "Napier": { "_type": "bool" } }
+      ] } },
+      { "Rarotonga": { "_type": "i32" } }
+    ]
 
   def test_none_counts_depth(self):
     expected = 7
@@ -126,17 +126,17 @@ class TestCountToPath():
 
 class TestPathFromCount():
   def setup_method(self):
-    self.root = { "_addr": "0000",
-      "NZ": {
-        "Auckland": {
-          "GlenInnes": { "_type": "u16" },
-          "Avondale": { "_type": "float" }
-        },
-        "Hamilton": {"_type": "u8" },
-        "Napier": { "_type": "bool" }
-      },
-      "Rarotonga": { "_type": "i32" }
-    }
+    self.root = [
+      { "NZ": { "_data": [
+        { "Auckland": { "_data": [
+          { "GlenInnes": { "_type": "u16"  } },
+          { "Avondale": { "_type": "float" } }
+        ] } },
+        { "Hamilton": {"_type": "u8"  } },
+        { "Napier": { "_type": "bool" } }
+      ] } },
+      { "Rarotonga": { "_type": "i32" } }
+    ]
 
   def test_zero_counts(self):
     expected = []
@@ -167,24 +167,6 @@ class TestPathFromCount():
     assert(result_count == expected_count)
 
 
-class TestAckPacketEncode():
-
-  def setup_method(self):
-    protocol_file_path = CONFIG_PATH
-    self.codec = codec.Codec(protocol_file_path)
-
-  def test_ack_encoding(self):
-    expected = ("A\n").encode('utf-8')
-    _packet = packet.Packet("ack")
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_nack_encoding(self):
-    expected = ("N\n").encode('utf-8')
-    _packet = packet.Packet("nak")
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
 
 class TestFromAddress():
   def setup_method(self):
@@ -211,7 +193,7 @@ class TestFromAddress():
     assert(expected == result)
 
   def test_mapped_root_struct_from_address(self):
-    expected = self.codec.protocol["data"]["protocol"]
+    expected = self.codec.protocol["_data"][0]["protocol"]
     result = self.codec.struct_from_address("0000")
     assert(expected == result)
 

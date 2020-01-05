@@ -5,49 +5,55 @@ from . import packet
 
 import json, struct
 
-class keys:
-  TYPE="_type"
-  ADDR="_addr"
+class protocolKey:
+  TYPE = "_type"
+  ADDR = "_addr"
+  DATA = "_data"
 
 def count_depth(root):
   count = 0
-  if keys.TYPE in root.keys():
-    return 0
 
-  for key in root.keys():
-    if key[0] != "_":
-      count += 1
-      count += count_depth(root[key])
+  for item in root:
+    count += 1
+    name = list(item.keys()).pop()
+    if protocolKey.DATA in item[name]:
+      count += count_depth(item[name][protocolKey.DATA])
 
   return count
 
 
 def count_to_path(root, path):
+
+  if not isinstance(root, list):
+    return None
+
   count = 0
   if path == None:
     return count_depth(root)
 
   search = path[0]
-  if search in root.keys():
-    for key in root.keys():
-      if key[0] != "_":
-        count += 1
-        if key != search:
-          if keys.TYPE in root[key]:
-            pass
-          else:
-            count += count_depth(root[key])
-        else:
-          break
 
-    if len(path) > 1:
-      incr = count_to_path(root[search], path[1:])
-      if (incr != None):
-        count += incr
+  for item in root:
+    # Expect only one key value pair per data item
+    key = list(item.keys()).pop()
+    count += 1
+    if key != search:
+      if protocolKey.TYPE in item[key]:
+        continue
       else:
-        return None
+        count += count_depth(item[key][protocolKey.DATA])
+    else:
+      if len(path) > 1:
+        incr = count_to_path(item[search][protocolKey.DATA], path[1:])
+        if (incr != None):
+          count += incr
+        else:
+          return None
+
+      break
 
   else:
+    # search item was not found
     return None
 
   return count
@@ -57,16 +63,18 @@ def path_from_count(root, count):
   if count <= 0:
     return ([], 0)
   else:
-    for key in root.keys():
-      if key[0] != "_":
-        count -= 1
-        path[0] = key
-        if keys.TYPE not in root[key]:
-          (npath, count) = path_from_count(root[key], count)
+    for item in root:
+      name = list(item.keys()).pop()
+      count -= 1
+      path[0] = name
+      if protocolKey.TYPE not in item[name]:
+        if protocolKey.DATA in item[name]:
+          (npath, count) = path_from_count(item[name][protocolKey.DATA], count)
           path = path + npath
-
-        if count == 0:
-          break
+        else:
+          continue
+      if count == 0:
+        break
     else:
       # did not count to 0, return an empty path
       path = []
@@ -76,11 +84,17 @@ def get_struct(root, path):
   if path == []:
     return root
 
-  if path[0] in root.keys():
-    if len(path) == 1:
-      return root[path[0]]
+  for item in root:
+    if path[0] in item.keys():
+      if len(path) == 1:
+        return item[path[0]]
+      else:
+        if protocolKey.DATA in item[path[0]]:
+          return get_struct(item[path[0]][protocolKey.DATA], path[1:])
+        else:
+          continue
     else:
-      return get_struct(root[path[0]], path[1:])
+      continue
   else:
     return None
 
@@ -88,12 +102,13 @@ def extract_types(root, path):
   start = get_struct(root, path)
   types = []
   if start != None:
-    if keys.TYPE in start.keys():
-      types.append(start[keys.TYPE])
+    if protocolKey.TYPE in start.keys():
+      types.append(start[protocolKey.TYPE])
     else:
-      for key in start.keys():
-        if key[0] != "_":
-          types = types + extract_types(start[key], [])
+      if protocolKey.DATA in start.keys():
+        for item in start[protocolKey.DATA]:
+          name = list(item.keys()).pop()
+          types = types + extract_types(item[name], [])
 
   return types
 
@@ -101,7 +116,7 @@ def extract_decendants(root, path):
   start = get_struct(root, path)
   decendants = []
   if start != None:
-    if keys.TYPE in start.keys():
+    if protocolKey.TYPE in start.keys():
       return [""]
     else:
       for key in start.keys():
@@ -244,12 +259,12 @@ class Codec():
             internal += self.protocol["compound"]
 
           path = ppath.split("/")
-          root = self.protocol["data"][path[0]]
+          root = self.protocol[protocolKey.DATA][path[0]]
 
           if ppath in self.path_to_address_map.keys():
             address = int(self.path_to_address_map[ppath], 16)
           else:
-            address = int(root["_addr"], 16)
+            address = int(root[protocolKey.ADDR], 16)
             if len(path) > 1:
               incr = self._count_to_path(root, path[1:])
               if (incr != None):
@@ -304,7 +319,7 @@ class Codec():
           addr = parts[0]
           path = self.path_from_address(addr)
           path_array = path.split("/")
-          root = self.protocol["data"][path_array[0]]
+          root = self.protocol[protocolKey.DATA][path_array[0]]
           if path in self.path_to_types_map.keys():
             types = self.path_to_types_map[path]
           else:
@@ -329,7 +344,7 @@ class Codec():
       if ppath in self.path_to_decendants_map:
         decendants = self.path_to_decendants_map[ppath]
       else:
-        decendants = extract_decendants(self.protocol["data"], ppath.split("/"))
+        decendants = extract_decendants(self.protocol[protocolKey.DATA], ppath.split("/"))
 
         self.path_to_decendants_map[ppath] = decendants
 
@@ -367,10 +382,14 @@ class Codec():
       if clamp(int(address, 16), int(key, 16), int(next_key, 16)-1) == int(address, 16):
         diff = int(address, 16) - int(key, 16)
 
-        (path, count) = path_from_count(
-          self.protocol["data"][self.address_map[key]],
-          diff
-        )
+        for item in self.protocol[protocolKey.DATA]:
+          if self.address_map[key] in item:
+            if protocolKey.DATA in item[self.address_map[key]]:
+              (path, count) = path_from_count(
+                item[self.address_map[key]][protocolKey.DATA],
+                diff
+              )
+
         if (count == 0):
           full_path = "/".join([self.address_map[key]] + path)
           self.path_to_address_map[full_path] = address
@@ -384,17 +403,21 @@ class Codec():
   # TODO: This doesn't work for any path which isn't at root!
   def struct_from_address(self, address):
     path = self.path_from_address(address)
-    struct = self.protocol["data"]
-    return struct[path]
+    for item in self.protocol[protocolKey.DATA]:
+      if path in item:
+        return item[path]
+    return None
 
   def _count_to_path(self, root, path):
     return count_to_path(root, path)
 
   def _generate_address_map(self):
-    for key in self.protocol["data"].keys():
-      if key[0] != "_":
-        if "_addr" in self.protocol["data"][key]:
-          self.address_map[self.protocol["data"][key]["_addr"]] = key
+    root_list = self.protocol[protocolKey.DATA]
+    for root_item in root_list:
+      for root_key in root_item.keys():
+        print(root_item[root_key])
+        if protocolKey.ADDR in root_item[root_key].keys():
+          self.address_map[root_item[root_key][protocolKey.ADDR]] = root_key
     # Sort the map
     self.address_map = dict(sorted(self.address_map.items()))
 

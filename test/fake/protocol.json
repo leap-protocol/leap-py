@@ -15,77 +15,77 @@
   "separator": ":",
   "compound": "|",
   "end": "\n",
-  "data": {
-    "protocol": { "_addr": "0000",
-      "version": {
-        "major": { "_type": "u8" },
-        "minor": { "_type": "u8" },
-        "patch": { "_type": "u16" }
-      },
-      "name": { "_type": "string" }
-    },
-    "ping": { "_addr": "1000", "_type":  "bool" },
-    "health": { "_addr": "1100",
-      "batt": {
-        "v": { "_type": "float" }
-      },
-      "os": {
-        "cpuse": { "_type": "float" }
-      }
-    },
-    "typecheck": { "_addr": "2000",
-      "string":   { "_type": "string" },
-      "boolean":  { "_type": "bool" },
-      "uint8":    { "_type": "u8" },
-      "uint16":   { "_type": "u16" },
-      "uint32":   { "_type": "u32" },
-      "uint64":   { "_type": "u64" },
-      "int8":     { "_type": "i8"  },
-      "int16":    { "_type": "i16" },
-      "int32":    { "_type": "i32" },
-      "int64":    { "_type": "i64" },
-      "float":    { "_type": "float" },
-      "double":   { "_type": "double" },
-      "enum":     { "_type": ["item 1", "item 2", "item 3", "item 4"] }
-    },
-    "control": { "_addr": "8000",
-      "disable": { "_type": "bool" },
-      "manual": {
-        "direction": { "_type": ["FW", "BW", "LT", "RT"] },
-        "speed": { "_type": "float" },
-        "duration": { "_type": "float" }
-      },
-      "automatic": {
-        "speed": { "_type": "float" }
-      },
-      "pid": {
-        "gains": {
-          "kp": { "_type": "float" },
-          "ki": { "_type": "float" },
-          "kd": { "_type": "float" }
-        },
-        "setpoint": {
-          "value": {"_type": "float" },
-          "profile": { "_type": ["flat", "square", "triangle"] }
-        }
-      }
-    },
-    "imu": { "_addr": "1200",
-      "accel": {
-        "x": { "_type": "float" },
-        "y": { "_type": "float" },
-        "z": { "_type": "float" }
-      },
-      "gyros": {
-        "x": { "_type": "float" },
-        "y": { "_type": "float" },
-        "z": { "_type": "float" }
-      },
-      "magne": {
-        "x": { "_type": "float" },
-        "y": { "_type": "float" },
-        "z": { "_type": "float" }
-      }
-    }
-  }
+  "_data": [
+    { "protocol": { "_addr": "0000", "_data": [
+      { "version": { "_data": [
+        { "major": { "_type": "u8"  } },
+        { "minor": { "_type": "u8"  } },
+        { "patch": { "_type": "u16" } }
+      ] } },
+      { "name": { "_type": "string" } }
+    ] } },
+    { "ping": { "_addr": "1000", "_type":  "bool" } },
+    { "health": { "_addr": "1100", "_data": [
+      { "batt": { "_data": [
+        { "v": { "_type": "float" } }
+      ] } },
+      { "os": { "_data": [
+        { "cpuse": { "_type": "float" } }
+      ] } }
+    ] } },
+    { "typecheck": { "_addr": "2000", "_data": [
+      { "string":   { "_type": "string" } },
+      { "boolean":  { "_type": "bool" } },
+      { "uint8":    { "_type": "u8" } },
+      { "uint16":   { "_type": "u16" } },
+      { "uint32":   { "_type": "u32" } },
+      { "uint64":   { "_type": "u64" } },
+      { "int8":     { "_type": "i8"  } },
+      { "int16":    { "_type": "i16" } },
+      { "int32":    { "_type": "i32" } },
+      { "int64":    { "_type": "i64" } },
+      { "float":    { "_type": "float" } },
+      { "double":   { "_type": "double" } },
+      { "enum":     { "_type": ["item 1", "item 2", "item 3", "item 4"] } }
+    ] } },
+    { "control": { "_addr": "8000", "_data": [
+      { "disable": { "_type": "bool" } },
+      { "manual": { "_data": [
+        { "direction": { "_type": ["FW", "BW", "LT", "RT"] } },
+        { "speed": { "_type": "float" } },
+        { "duration": { "_type": "float" } }
+      ] } },
+      { "automatic": { "_data": [
+        { "speed": { "_type": "float" } }
+      ] } },
+      { "pid": { "_data": [
+        { "gains": { "_data": [
+          { "kp": { "_type": "float" } },
+          { "ki": { "_type": "float" } },
+          { "kd": { "_type": "float" } }
+        ] } },
+        { "setpoint": { "_data": [
+          { "value": { "_type": "float" } },
+          { "profile": { "_type": ["flat", "square", "triangle"] } }
+        ] } }
+      ] } }
+    ] } },
+    { "imu": { "_addr": "1200", "_data": [
+      { "accel": { "_data": [
+       { "x": { "_type": "float" } },
+       { "y": { "_type": "float" } },
+       { "z": { "_type": "float" } }
+      ] } },
+      { "gyros": { "_data": [
+        { "x": { "_type": "float" } },
+        { "y": { "_type": "float" } },
+        { "z": { "_type": "float" } }
+      ] } },
+      { "magne": { "_data": [
+        { "x": { "_type": "float" } },
+        { "y": { "_type": "float" } },
+        { "z": { "_type": "float" } }
+      ] } }
+    ] } }
+  ]
 }

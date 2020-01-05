@@ -5,9 +5,13 @@ from . import packet
 
 import json, struct
 
+class keys:
+  TYPE="_type"
+  ADDR="_addr"
+
 def count_depth(root):
   count = 0
-  if "type" in root.keys():
+  if keys.TYPE in root.keys():
     return 0
 
   for key in root.keys():
@@ -29,7 +33,7 @@ def count_to_path(root, path):
       if key[0] != "_":
         count += 1
         if key != search:
-          if "type" in root[key]:
+          if keys.TYPE in root[key]:
             pass
           else:
             count += count_depth(root[key])
@@ -57,7 +61,7 @@ def path_from_count(root, count):
       if key[0] != "_":
         count -= 1
         path[0] = key
-        if "type" not in root[key]:
+        if keys.TYPE not in root[key]:
           (npath, count) = path_from_count(root[key], count)
           path = path + npath
 
@@ -84,8 +88,8 @@ def extract_types(root, path):
   start = get_struct(root, path)
   types = []
   if start != None:
-    if "type" in start.keys():
-      types.append(start["type"])
+    if keys.TYPE in start.keys():
+      types.append(start[keys.TYPE])
     else:
       for key in start.keys():
         if key[0] != "_":
@@ -97,7 +101,7 @@ def extract_decendants(root, path):
   start = get_struct(root, path)
   decendants = []
   if start != None:
-    if "type" in start.keys():
+    if keys.TYPE in start.keys():
       return [""]
     else:
       for key in start.keys():

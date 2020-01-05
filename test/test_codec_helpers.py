@@ -8,13 +8,13 @@ class TestGetStruct():
     self.root = { "_addr": "0000",
       "NZ": {
         "Auckland": {
-          "GlenInnes": { "type": "u16", "set": False },
-          "Avondale": { "type": "float", "set": True}
+          "GlenInnes": { "_type": "u16" },
+          "Avondale": { "_type": "float"}
         },
-        "Hamilton": {"type": "u8", "set": True },
-        "Napier": { "type": "bool", "set": False }
+        "Hamilton": {"_type": "u8" },
+        "Napier": { "_type": "bool" }
       },
-      "Rarotonga": { "type": "i32", "set": True }
+      "Rarotonga": { "_type": "i32" }
     }
 
   def test_get_none(self):
@@ -80,13 +80,13 @@ class TestCountToPath():
     self.root = { "_addr": "0000",
       "NZ": {
         "Auckland": {
-          "GlenInnes": { "type": "u16", "set": False },
-          "Avondale": { "type": "float", "set": True}
+          "GlenInnes": { "_type": "u16" },
+          "Avondale": { "_type": "float" }
         },
-        "Hamilton": {"type": "u8", "set": True },
-        "Napier": { "type": "bool", "set": False }
+        "Hamilton": {"_type": "u8" },
+        "Napier": { "_type": "bool" }
       },
-      "Rarotonga": { "type": "i32", "set": True }
+      "Rarotonga": { "_type": "i32" }
     }
 
   def test_none_counts_depth(self):
@@ -129,13 +129,13 @@ class TestPathFromCount():
     self.root = { "_addr": "0000",
       "NZ": {
         "Auckland": {
-          "GlenInnes": { "type": "u16", "set": False },
-          "Avondale": { "type": "float", "set": True}
+          "GlenInnes": { "_type": "u16" },
+          "Avondale": { "_type": "float" }
         },
-        "Hamilton": {"type": "u8", "set": True },
-        "Napier": { "type": "bool", "set": False }
+        "Hamilton": {"_type": "u8" },
+        "Napier": { "_type": "bool" }
       },
-      "Rarotonga": { "type": "i32", "set": True }
+      "Rarotonga": { "_type": "i32" }
     }
 
   def test_zero_counts(self):

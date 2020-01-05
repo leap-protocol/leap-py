@@ -1,4 +1,4 @@
-from .. import codec, packet
+from leap import codec, packet
 import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"
@@ -66,7 +66,7 @@ class TestGetPacketEncode():
     ]
     result = self.codec.encode(packets)
     assert(result == expected)
-  
+
   def test_compound_mixed_packets(self):
     expected = ("G1201\nB0005\nS2002:0\nG0003\nP0004:1234\n").encode('utf-8')
     packets = [
@@ -157,7 +157,7 @@ class TestSetPacketEncodeSingle():
     _packet = packet.Packet("set", "typecheck/uint8", tuple([0xa5]))
     result = self.codec.encode(_packet)
     assert(result == expected)
-  
+
   def test_underflow_u8(self):
     expected = ("S2003:00\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/uint8", tuple([-0xa5]))
@@ -228,7 +228,7 @@ class TestSetPacketEncodeSingle():
     expected = ("S2007:11\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/int8", tuple([0x11]))
     result = self.codec.encode(_packet)
-    assert(result == expected)  
+    assert(result == expected)
 
   def test_negative_i8(self):
     expected = ("S2007:ef\n").encode('utf-8')
@@ -247,7 +247,7 @@ class TestSetPacketEncodeSingle():
     _packet = packet.Packet("set", "typecheck/int8", tuple([-0x1FF]))
     result = self.codec.encode(_packet)
     assert(result == expected)
-  
+
   def test_simple_i16(self):
     expected = ("S2008:0234\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/int16", tuple([0x0234]))

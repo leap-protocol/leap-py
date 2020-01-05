@@ -1,4 +1,4 @@
-from .. import codec, packet
+from leap import codec, packet
 import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"

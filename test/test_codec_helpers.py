@@ -1,4 +1,4 @@
-from .. import codec, packet
+from leap import codec, packet
 import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"
@@ -21,7 +21,7 @@ class TestGetStruct():
     expected = None
     result = codec.get_struct(self.root, ["Florida"])
     assert(result == expected)
-  
+
   def test_get_last(self):
     expected = self.root["Rarotonga"]
     result = codec.get_struct(self.root, ["Rarotonga"])
@@ -234,7 +234,7 @@ class TestFromAddress():
     expected = ""
     result = self.codec.path_from_address("9000")
     assert(expected == result)
-  
+
   def test_invalid_path(self):
     expected = ""
     result = self.codec.path_from_address("invalid")

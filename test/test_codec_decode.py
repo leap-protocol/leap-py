@@ -1,4 +1,4 @@
-from .. import codec, packet
+from leap import codec, packet
 import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"
@@ -19,13 +19,13 @@ class TestGetPacketDecode():
     (result, packets) = self.codec.decode("G0000\nS10".encode('utf-8'))
     assert(result == expected)
     assert(len(packets) == 1)
-  
+
   def test_incomplete(self):
     expected = "S10".encode('utf-8')
     (result, packets) = self.codec.decode("S10".encode('utf-8'))
     assert(result == expected)
     assert(len(packets) == 0)
-  
+
   def test_nested_decoding(self):
     expected = packet.Packet("get", "protocol/version/patch")
     (_, [result]) = self.codec.decode("G0004\n".encode('utf-8'))
@@ -42,7 +42,7 @@ class TestGetPacketDecode():
     expected = packet.Packet("ack", "control")
     (_, [result]) = self.codec.decode("A8000\n".encode('utf-8'))
     assert(result.category == expected.category)
-  
+
   def test_nack_category(self):
     expected = packet.Packet("nak", "control")
     (_, [result]) = self.codec.decode("N8000\n".encode('utf-8'))
@@ -157,7 +157,7 @@ class TestSetPayloadDecodeSingle():
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)
-  
+
   def test_underflow_u8(self):
     expected = packet.Packet("set", "typecheck/uint8", tuple([0x00]))
     (_, [result]) = self.codec.decode(("S2003:-e3\n").encode('utf-8'))

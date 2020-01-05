@@ -1,5 +1,5 @@
-from .. import packet
-from .fake import fakeCodec
+from leap import packet
+from fake import fakeCodec
 
 
 class TestPacketInstantiation():
@@ -35,5 +35,5 @@ class TestPacketUnpack():
     assert(self.codec.unpack_called == True)
     assert(result == expected)
 
-  
+
 

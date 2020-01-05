@@ -318,3 +318,10 @@ class TestSetPayloadDecodeSingle():
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)
+
+  def test_none(self):
+    expected = packet.Packet("set", "typecheck/none", tuple([None]))
+    (_, [result]) = self.codec.decode(("S200e:\n").encode('utf-8'))
+    assert(result.category == expected.category)
+    assert(result.paths == expected.paths)
+    assert(result.payloads == expected.payloads)

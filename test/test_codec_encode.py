@@ -344,3 +344,9 @@ class TestSetPacketEncodeSingle():
     result = self.codec.encode(_packet)
     assert(result == expected)
 
+  def test_enum_none(self):
+    expected = ("S200e:\n").encode('utf-8')
+    _packet = packet.Packet("set", "typecheck/none", tuple(["unneccesary"]))
+    result = self.codec.encode(_packet)
+    assert(result == expected)
+

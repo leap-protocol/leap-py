@@ -10,7 +10,7 @@ init:
 test:
 	(\
 		source "./env/bin/activate"; \
-		python3 -m pytest -k helpers; \
+		python3 -m pytest; \
 	)
 
 .PHONY: init test

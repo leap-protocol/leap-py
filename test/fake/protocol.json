@@ -46,7 +46,8 @@
       { "int64":    { "_type": "i64" } },
       { "float":    { "_type": "float" } },
       { "double":   { "_type": "double" } },
-      { "enum":     { "_type": ["item 1", "item 2", "item 3", "item 4"] } }
+      { "enum":     { "_type": ["item 1", "item 2", "item 3", "item 4"] } },
+      { "none":     { "_type": "none" } }
     ] } },
     { "control": { "_addr": "8000", "_data": [
       { "disable": { "_type": "bool" } },

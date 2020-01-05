@@ -124,17 +124,17 @@ def extract_decendants(root, path):
   start = get_struct(root, path)
   decendants = []
   if start != None:
-    if protocolKey.TYPE in start.keys():
-      return [""]
+    if protocolKey.DATA in start.keys():
+      for item in start[protocolKey.DATA]:
+        name = list(item.keys()).pop()
+        next_decendants = extract_decendants(item[name], [])
+        if next_decendants == [""]:
+          decendants.append(name)
+        else:
+          for branch in next_decendants:
+            decendants.append("/".join([name, branch]))
     else:
-      for key in start.keys():
-        if key[0] != "_":
-          next_decendants = extract_decendants(start[key], [])
-          if next_decendants == [""]:
-            decendants.append(key)
-          else:
-            for branch in next_decendants:
-              decendants.append("/".join([key, branch]))
+      return [""]
 
   return decendants
 
@@ -230,7 +230,7 @@ def decode_types(item, typeof):
     else:
       return None
   else:
-    return ""
+    return None
 
 class Codec():
   def __init__(self, protocol_file_path):
@@ -267,7 +267,7 @@ class Codec():
             internal += self.protocol["compound"]
 
           path = ppath.split("/")
-          root = self.protocol[protocolKey.DATA][path[0]]
+          root = get_struct(self.protocol, [path[0]])
 
           if ppath in self.path_to_address_map.keys():
             address = int(self.path_to_address_map[ppath], 16)
@@ -327,7 +327,7 @@ class Codec():
           addr = parts[0]
           path = self.path_from_address(addr)
           path_array = path.split("/")
-          root = self.protocol[protocolKey.DATA][path_array[0]]
+          root = get_struct(self.protocol, [path_array[0]])
           if path in self.path_to_types_map.keys():
             types = self.path_to_types_map[path]
           else:
@@ -352,7 +352,7 @@ class Codec():
       if ppath in self.path_to_decendants_map:
         decendants = self.path_to_decendants_map[ppath]
       else:
-        decendants = extract_decendants(self.protocol[protocolKey.DATA], ppath.split("/"))
+        decendants = extract_decendants(self.protocol, ppath.split("/"))
 
         self.path_to_decendants_map[ppath] = decendants
 

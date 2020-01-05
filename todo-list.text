@@ -2,11 +2,16 @@
   [X] Import RoBus into leap
     [X] All Robus elements are renamed correctly
     [X] Structure to support packaging
-  [] Implement fundamental codec changes
-    [] JSON formatting with _data arrays
-    [] Changes to _addr offsets
-    [] Remove settable stuff
+  [X] Implement fundamental codec changes
+    [X] JSON formatting with _data arrays
+    [] Changes to use _addr offsets
+      [] Have all addresses assigned to each item on load to simplify address identification
+      [] Allow addresses outside of the root items
+    [X] Remove settable stuff
     [] Add "none" as a data _type
+  [] _ is no longer required since all data objects are in arrays
+    [] Update code base/tests so _type, _addr and _data are type, addr and data
+    [] Update spec to reflect this
 
 [] Add sample JSON config file to root
 

@@ -93,29 +93,23 @@ def extract_types(root, path):
 
   return types
 
-def extract_path_settable_pairs(root, path):
+def extract_decendants(root, path):
   start = get_struct(root, path)
-  paths = []
-  settables = []
+  decendants = []
   if start != None:
     if "type" in start.keys():
-      if "set" in start.keys():
-        return ([""], [start["set"]])
-      else:
-        return ([], [])
+      return [""]
     else:
       for key in start.keys():
         if key[0] != "_":
-          (deep_paths, deep_settables) = extract_path_settable_pairs(start[key], [])
-          if deep_paths == [""]:
-            paths.append(key)
-            settables += deep_settables
+          next_decendants = extract_decendants(start[key], [])
+          if next_decendants == [""]:
+            decendants.append(key)
           else:
-            for (deep_path, deep_settable) in tuple(zip(deep_paths, deep_settables)):
-              paths.append("/".join([key, deep_path]))
-              settables.append(deep_settable)
+            for branch in next_decendants:
+              decendants.append("/".join([key, branch]))
 
-  return (paths, settables)
+  return decendants
 
 def clamp(value, min_value, max_value):
   return max(min_value, min(value, max_value))
@@ -220,7 +214,7 @@ class Codec():
     self.path_to_address_map = {}
     self.path_to_types_map = {}
     self.types_to_path_map = {}
-    self.root_path_to_path_settable_pairs_map = {}
+    self.path_to_decendants_map = {}
 
     self._generate_address_map()
     self._generate_category_map()
@@ -327,17 +321,20 @@ class Codec():
   def unpack(self, _packet):
     result = {}
     for ppath, ppayload in tuple(zip(_packet.paths, _packet.payloads)) :
-      if ppath in self.root_path_to_path_settable_pairs_map:
-        (paths, settables) = self.root_path_to_path_settable_pairs_map[ppath]
+
+      if ppath in self.path_to_decendants_map:
+        decendants = self.path_to_decendants_map[ppath]
       else:
-        (paths, settables) = extract_path_settable_pairs(self.protocol["data"], ppath.split("/"))
-        self.root_path_to_path_settable_pairs_map[ppath] = (paths, settables)
-      if paths == [""] and len(ppayload) == 1:
-        result[ppath] = {"value": ppayload[0], "set": settables[0]}
-      else:
-        for (path_end, settable, value) in tuple(zip(paths, settables, ppayload)):
-          path = "/".join([ppath] + [path_end])
-          result[path] = {"value": value, "set": settable}
+        decendants = extract_decendants(self.protocol["data"], ppath.split("/"))
+
+        self.path_to_decendants_map[ppath] = decendants
+
+      for (decendant, value) in tuple(zip(decendants, ppayload)):
+        if decendant != "":
+          path = "/".join([ppath] + [decendant])
+        else:
+          path = ppath
+        result[path] = value
     return result
 
   def category_from_start(self, start):
@@ -365,7 +362,7 @@ class Codec():
 
       if clamp(int(address, 16), int(key, 16), int(next_key, 16)-1) == int(address, 16):
         diff = int(address, 16) - int(key, 16)
-        
+
         (path, count) = path_from_count(
           self.protocol["data"][self.address_map[key]],
           diff
@@ -385,18 +382,6 @@ class Codec():
     path = self.path_from_address(address)
     struct = self.protocol["data"]
     return struct[path]
-
-  def is_settable(self, address):
-    struct = get_struct(self.protocol["data"], address.split("/"))
-    if struct == None:
-      # Cannot set something not part of the protocol
-      return False
-    else:
-      if "set" in struct:
-        return struct["set"]
-      else:
-        # An incomplete address may or may not be settable
-        return None
 
   def _count_to_path(self, root, path):
     return count_to_path(root, path)

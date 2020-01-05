@@ -241,28 +241,4 @@ class TestFromAddress():
     assert(expected == result)
 
 
-class TestGetSettableFromPath():
-  def setup_method(self):
-    protocol_file_path = CONFIG_PATH
-    self.codec = codec.Codec(protocol_file_path)
-
-  def test_is_settable(self):
-    expected = True
-    result = self.codec.is_settable("typecheck/string")
-    assert(result == expected)
-
-  def test_not_settable(self):
-    expected = False
-    result = self.codec.is_settable("imu/accel/y")
-    assert(result == expected)
-
-  def test_incomplete_address(self):
-    expected = None
-    result = self.codec.is_settable("imu/accel")
-    assert(result == expected)
-
-  def test_invalid_address(self):
-    expected = False
-    result = self.codec.is_settable("imu/invalid/invalid")
-    assert(result == expected)
 

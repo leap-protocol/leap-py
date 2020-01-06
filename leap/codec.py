@@ -5,6 +5,18 @@ from . import packet
 
 import json, struct
 
+class DecodeData:
+  def __init__(self, path="", decendants=[], types=[]):
+    self.path = path
+    self.decendants = decendants
+    self.types = types
+
+class EncodeData:
+  def __init__(self, addr="0000", decendants=[], types=[]):
+    self.addr = addr
+    self.decendants = decendants
+    self.types = types
+
 class protocolKey:
   TYPE = "_type"
   ADDR = "_addr"
@@ -138,6 +150,23 @@ def extract_decendants(root, path):
 
   return decendants
 
+def extract_branches(root, path):
+  start = get_struct(root, path)
+  decendants = []
+  if start != None:
+    if protocolKey.DATA in start.keys():
+      for item in start[protocolKey.DATA]:
+        name = list(item.keys()).pop()
+        decendants.append(name)
+        next_decendants = extract_branches(item[name], [])
+        if next_decendants != [""]:
+          for branch in next_decendants:
+            decendants.append("/".join([name, branch]))
+    else:
+      return [""]
+
+  return decendants
+
 def clamp(value, min_value, max_value):
   return max(min_value, min(value, max_value))
 
@@ -232,10 +261,46 @@ def decode_types(item, typeof):
   else:
     return None
 
+class Helpers():
+  def generate_encode_map(protocol):
+    _map = {}
+    count = count_to_path(protocol, None)
+    addr = None
+    branches = extract_branches(protocol, [])
+    print(branches)
+    types = extract_types(protocol, [])
+    roots = []
+    for branch in branches:
+      roots.append(get_struct(protocol, branch.split('/')))
+
+    for i in range(len(roots)):
+      root = roots[i]
+      branch = branches[i]
+      if protocolKey.ADDR in root:
+        addr = root[protocolKey.ADDR]
+      else:
+        if addr == None:
+          addr = "0000"
+        else:
+          addr = "{:04x}".format(int(addr,16) + 1)
+
+      _map[branch] = EncodeData(addr=addr)
+    return _map
+
+  def generate_decode_map(protocol):
+    map = {}
+    count = count_to_path(protocol, None)
+    for i in range(count):
+      map[str(i)] = ""
+    return map
+
+
 class Codec():
   def __init__(self, protocol_file_path):
     with open(protocol_file_path, "r") as protocol_file:
       self.protocol = json.load(protocol_file)
+    self.encode_map = Helpers.generate_encode_map(self.protocol)
+    self.decode_map = Helpers.generate_decode_map(self.protocol)
     self.address_map = {}
     self.address_to_path_map = {}
     self.path_to_address_map = {}
@@ -245,6 +310,7 @@ class Codec():
 
     self._generate_address_map()
     self._generate_category_map()
+
 
   def encode(self, packets):
     if isinstance(packets, packet.Packet):

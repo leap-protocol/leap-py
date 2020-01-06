@@ -2,16 +2,37 @@
   [X] Import RoBus into leap
     [X] All Robus elements are renamed correctly
     [X] Structure to support packaging
+  [] Implement data processing from raw JSON data
+    [] Process the JSON data into sets of Decode/Encode data
+    [] Implement on Encode, Decode and Unpack functions
+    [] Tidy up any unneccessary methods left over
   [X] Implement fundamental codec changes
     [X] JSON formatting with _data arrays
     [] Changes to use _addr offsets
       [] Have all addresses assigned to each item on load to simplify address identification
       [] Allow addresses outside of the root items
     [X] Remove settable stuff
-    [] Add "none" as a data _type
+    [X] Add "none" as a data _type
   [] _ is no longer required since all data objects are in arrays
     [] Update code base/tests so _type, _addr and _data are type, addr and data
     [] Update spec to reflect this
+  [] Put all helper functions under a Helper class
+  [] Take JSON processing out of codec, just pass a raw protocol object instead
+
+
+
+
+* Want to break items down into sets of information so we no longer do searches from the raw JSON data when decoding/encoding
+* would like to have a data structure indexed by address for decoding:
+  * codec.decode_map = { addr: DecodeData }
+  * DecodeData:
+    * path = ""
+    * decendants = []
+    * types = []
+  * codec.encode_map = { path: EncodeData }
+    * addr = ""
+    * decendants = []
+    * types = []
 
 [] Add sample JSON config file to root
 

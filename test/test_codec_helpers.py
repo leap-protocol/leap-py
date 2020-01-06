@@ -3,16 +3,16 @@ import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol.json"
 
-countries_root = { "_data": [
-  { "NZ": { "_data": [
-    { "Auckland": { "_data": [
-      { "GlenInnes": { "_type": "u16"  } },
-      { "Avondale": { "_type": "float" } }
+countries_root = { "data": [
+  { "NZ": { "data": [
+    { "Auckland": { "data": [
+      { "GlenInnes": { "type": "u16"  } },
+      { "Avondale": { "type": "float" } }
     ] } },
-    { "Hamilton": {"_type": "u8"  } },
-    { "Napier": { "_type": "bool" } }
+    { "Hamilton": {"type": "u8"  } },
+    { "Napier": { "type": "bool" } }
   ] } },
-  { "Rarotonga": { "_type": "i32" } }
+  { "Rarotonga": { "type": "i32" } }
 ] }
 
 class TestGetStruct():
@@ -25,7 +25,7 @@ class TestGetStruct():
     assert(result == expected)
 
   def test_get_last(self):
-    expected = { "_type": "i32" }
+    expected = { "type": "i32" }
     result = codec.get_struct(self.root, ["Rarotonga"])
     assert(result == expected)
 
@@ -35,12 +35,12 @@ class TestGetStruct():
     assert(result == expected)
 
   def test_get_deep(self):
-    expected = { "_type": "float" }
+    expected = { "type": "float" }
     result = codec.get_struct(self.root, ["NZ", "Auckland", "Avondale"])
     assert(result == expected)
 
   def test_get_another(self):
-    expected = { "_type": "bool" }
+    expected = { "type": "bool" }
     result = codec.get_struct(self.root, ["NZ", "Napier"])
     assert(result == expected)
 

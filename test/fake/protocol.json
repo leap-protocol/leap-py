@@ -15,76 +15,76 @@
   "separator": ":",
   "compound": "|",
   "end": "\n",
-  "_data": [
-    { "protocol": { "_addr": "0000", "_data": [
-      { "version": { "_data": [
-        { "major": { "_type": "u8"  } },
-        { "minor": { "_type": "u8"  } },
-        { "patch": { "_type": "u16" } }
+  "data": [
+    { "protocol": { "addr": "0000", "data": [
+      { "version": { "data": [
+        { "major": { "type": "u8"  } },
+        { "minor": { "type": "u8"  } },
+        { "patch": { "type": "u16" } }
       ] } },
-      { "name": { "_type": "string" } }
+      { "name": { "type": "string" } }
     ] } },
-    { "ping": { "_addr": "1000", "_type":  "bool" } },
-    { "health": { "_addr": "1100", "_data": [
-      { "batt": { "_data": [
-        { "v": { "_type": "float" } }
+    { "ping": { "addr": "1000", "type":  "bool" } },
+    { "health": { "addr": "1100", "data": [
+      { "batt": { "data": [
+        { "v": { "type": "float" } }
       ] } },
-      { "os": { "_data": [
-        { "cpuse": { "_type": "float" } }
+      { "os": { "data": [
+        { "cpuse": { "type": "float" } }
       ] } }
     ] } },
-    { "imu": { "_addr": "1200", "_data": [
-      { "accel": { "_data": [
-       { "x": { "_type": "float" } },
-       { "y": { "_type": "float" } },
-       { "z": { "_type": "float" } }
+    { "imu": { "addr": "1200", "data": [
+      { "accel": { "data": [
+       { "x": { "type": "float" } },
+       { "y": { "type": "float" } },
+       { "z": { "type": "float" } }
       ] } },
-      { "gyros": { "_data": [
-        { "x": { "_type": "float" } },
-        { "y": { "_type": "float" } },
-        { "z": { "_type": "float" } }
+      { "gyros": { "data": [
+        { "x": { "type": "float" } },
+        { "y": { "type": "float" } },
+        { "z": { "type": "float" } }
       ] } },
-      { "magne": { "_data": [
-        { "x": { "_type": "float" } },
-        { "y": { "_type": "float" } },
-        { "z": { "_type": "float" } }
+      { "magne": { "data": [
+        { "x": { "type": "float" } },
+        { "y": { "type": "float" } },
+        { "z": { "type": "float" } }
       ] } }
     ] } },
-    { "typecheck": { "_addr": "2000", "_data": [
-      { "string":   { "_type": "string" } },
-      { "boolean":  { "_type": "bool" } },
-      { "uint8":    { "_type": "u8" } },
-      { "uint16":   { "_type": "u16" } },
-      { "uint32":   { "_type": "u32" } },
-      { "uint64":   { "_type": "u64" } },
-      { "int8":     { "_type": "i8"  } },
-      { "int16":    { "_type": "i16" } },
-      { "int32":    { "_type": "i32" } },
-      { "int64":    { "_type": "i64" } },
-      { "float":    { "_type": "float" } },
-      { "double":   { "_type": "double" } },
-      { "enum":     { "_type": ["item 1", "item 2", "item 3", "item 4"] } },
-      { "none":     { "_type": "none" } }
+    { "typecheck": { "addr": "2000", "data": [
+      { "string":   { "type": "string" } },
+      { "boolean":  { "type": "bool" } },
+      { "uint8":    { "type": "u8" } },
+      { "uint16":   { "type": "u16" } },
+      { "uint32":   { "type": "u32" } },
+      { "uint64":   { "type": "u64" } },
+      { "int8":     { "type": "i8"  } },
+      { "int16":    { "type": "i16" } },
+      { "int32":    { "type": "i32" } },
+      { "int64":    { "type": "i64" } },
+      { "float":    { "type": "float" } },
+      { "double":   { "type": "double" } },
+      { "enum":     { "type": ["item 1", "item 2", "item 3", "item 4"] } },
+      { "none":     { "type": "none" } }
     ] } },
-    { "control": { "_addr": "8000", "_data": [
-      { "disable": { "_type": "bool" } },
-      { "manual": { "_data": [
-        { "direction": { "_type": ["FW", "BW", "LT", "RT"] } },
-        { "speed": { "_type": "float" } },
-        { "duration": { "_type": "float" } }
+    { "control": { "addr": "8000", "data": [
+      { "disable": { "type": "bool" } },
+      { "manual": { "data": [
+        { "direction": { "type": ["FW", "BW", "LT", "RT"] } },
+        { "speed": { "type": "float" } },
+        { "duration": { "type": "float" } }
       ] } },
-      { "automatic": { "_data": [
-        { "speed": { "_type": "float" } }
+      { "automatic": { "data": [
+        { "speed": { "type": "float" } }
       ] } },
-      { "pid": { "_data": [
-        { "gains": { "_data": [
-          { "kp": { "_type": "float" } },
-          { "ki": { "_type": "float" } },
-          { "kd": { "_type": "float" } }
+      { "pid": { "data": [
+        { "gains": { "data": [
+          { "kp": { "type": "float" } },
+          { "ki": { "type": "float" } },
+          { "kd": { "type": "float" } }
         ] } },
-        { "setpoint": { "_data": [
-          { "value": { "_type": "float" } },
-          { "profile": { "_type": ["flat", "square", "triangle"] } }
+        { "setpoint": { "data": [
+          { "value": { "type": "float" } },
+          { "profile": { "type": ["flat", "square", "triangle"] } }
         ] } }
       ] } }
     ] } }

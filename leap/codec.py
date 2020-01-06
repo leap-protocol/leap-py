@@ -14,9 +14,9 @@ class ItemData:
     self.types = types
 
 class protocolKey:
-  TYPE = "_type"
-  ADDR = "_addr"
-  DATA = "_data"
+  TYPE = "type"
+  ADDR = "addr"
+  DATA = "data"
 
 def count_depth(root):
   count = 0

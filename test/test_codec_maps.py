@@ -24,7 +24,7 @@ class TestEncodeMap():
       assert(expected == result)
 
   def test_correct_address_data(self):
-    expected_addr = [ "0000", "0001", "0002", "0003", "0004", "0005", "0100", "1000" ]
+    expected_addr = [ "1000", "1001", "1002", "1003", "1004", "1005", "1a00", "2000" ]
     for expected, item in zip(expected_addr, self.codec.encode_map.values()):
       assert(expected == item.addr)
 
@@ -75,7 +75,7 @@ class TestDecodeMap():
       assert(isinstance(item, codec.ItemData))
 
   def test_correct_keys(self):
-    expected_keys = [ "0000", "0001", "0002", "0003", "0004", "0005", "0100", "1000" ]
+    expected_keys = [ "1000", "1001", "1002", "1003", "1004", "1005", "1a00", "2000" ]
     for expected, result in zip(expected_keys, self.codec.decode_map.keys()):
       assert(expected == result)
 

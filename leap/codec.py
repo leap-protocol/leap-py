@@ -239,7 +239,10 @@ class Helpers():
     decode_map = {}
     count = count_to_path(protocol, None)
     # TODO Track address depth and addr
-    addr = None
+    addr_path = []
+    addr = 0
+    prev_depth = 0
+    max_depth = -1
     branches = extract_branches(protocol, [])
     roots = []
     for branch in branches:
@@ -248,14 +251,27 @@ class Helpers():
     for i in range(len(roots)):
       root = roots[i]
       branch = branches[i]
+      depth = branch.count('/')
+
+      if max_depth < depth:
+        addr_path.append("")
 
       if protocolKey.ADDR in root:
-        addr = root[protocolKey.ADDR]
-      else:
-        if addr == None:
-          addr = "0000"
+        if depth == 0:
+          addr_path[depth] = root[protocolKey.ADDR]
         else:
-          addr = "{:04x}".format(int(addr,16) + 1)
+          int_addr = int(addr_path[depth-1], 16) + int(root[protocolKey.ADDR], 16)
+          addr_path[depth] = "{:04x}".format(int_addr)
+      else:
+        if addr_path[0] == "":
+          addr_path[0] = "0000"
+        else:
+          addr_path[depth] = "{:04x}".format(int(addr_path[prev_depth],16) + 1)
+
+      prev_depth = depth
+      max_depth = max(max_depth, depth)
+      addr = addr_path[depth]
+
 
       data_branches = []
       ends = extract_decendants(root, [])

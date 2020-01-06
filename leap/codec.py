@@ -303,13 +303,7 @@ class Codec():
       self.protocol = json.load(protocol_file)
     (self.encode_map, self.decode_map) = Helpers.generate_maps(self.protocol)
     self.address_map = {}
-    self.address_to_path_map = {}
-    self.path_to_address_map = {}
-    self.path_to_types_map = {}
-    self.types_to_path_map = {}
-    self.path_to_decendants_map = {}
 
-    self._generate_address_map()
     self._generate_category_map()
 
 
@@ -328,7 +322,8 @@ class Codec():
 
       internal = ""
 
-      for (ppath, ppayload) in tuple(zip(_packet.paths, _packet.payloads)):
+      paths_and_payloads = tuple(zip(_packet.paths, _packet.payloads))
+      for (ppath, ppayload) in paths_and_payloads:
         if ppath != None:
           if internal != "":
             internal += self.protocol["compound"]
@@ -336,30 +331,20 @@ class Codec():
           path = ppath.split("/")
           root = get_struct(self.protocol, [path[0]])
 
-          if ppath in self.path_to_address_map.keys():
-            address = int(self.path_to_address_map[ppath], 16)
+          if ppath in self.encode_map:
+            encode_data = self.encode_map[ppath]
           else:
-            address = int(root[protocolKey.ADDR], 16)
-            if len(path) > 1:
-              incr = self._count_to_path(root, path[1:])
-              if (incr != None):
-                address += incr
-                self.path_to_address_map[ppath] = "{:04x}".format(address)
-              else:
-                print("invalid address: {}".format(ppath))
-                return "".encode("utf-8")
+            print("invalid address: {}".format(ppath))
+            return "".encode("utf-8")
 
-          internal += "{:04x}".format(address)
-        if ppayload != None:
-          if ppath in self.path_to_types_map:
-            types = self.path_to_types_map[ppath]
-          else:
-            types = extract_types(root, path[1:])
-            self.path_to_types_map[ppath] = types
-          count = min(len(types), len(ppayload))
-          for i in range(count):
-            internal += self.protocol["separator"]
-            internal += encode_types(ppayload[i], types[i])
+          internal += encode_data.addr
+
+          if ppayload != None:
+
+            count = min(len(encode_data.types), len(ppayload))
+            for i in range(count):
+              internal += self.protocol["separator"]
+              internal += encode_types(ppayload[i], encode_data.types[i])
 
       encoded += internal
 
@@ -392,43 +377,26 @@ class Codec():
         if parts != ['']:
           payload = []
           addr = parts[0]
-          path = self.path_from_address(addr)
-          path_array = path.split("/")
-          root = get_struct(self.protocol, [path_array[0]])
-          if path in self.path_to_types_map.keys():
-            types = self.path_to_types_map[path]
-          else:
-            types = extract_types(root, path_array[1:])
-            self.path_to_types_map[path] = types
+          decode_data = self.decode_map[addr]
 
-          for (item, typeof) in tuple(zip(parts[1:], types)):
+          for (item, typeof) in tuple(zip(parts[1:], decode_data.types)):
             payload.append(decode_types(item, typeof))
 
           payload = tuple(payload)
-
-          _packet.add(path, payload)
+          _packet.add(decode_data.path, payload)
 
       packets.append(_packet)
 
     return (remainder, packets)
 
+
   def unpack(self, _packet):
     result = {}
     for ppath, ppayload in tuple(zip(_packet.paths, _packet.payloads)) :
 
-      if ppath in self.path_to_decendants_map:
-        decendants = self.path_to_decendants_map[ppath]
-      else:
-        decendants = extract_decendants(self.protocol, ppath.split("/"))
-
-        self.path_to_decendants_map[ppath] = decendants
-
-      for (decendant, value) in tuple(zip(decendants, ppayload)):
-        if decendant != "":
-          path = "/".join([ppath] + [decendant])
-        else:
-          path = ppath
-        result[path] = value
+      unpack_data = self.encode_map[ppath]
+      for (branch, value) in tuple(zip(unpack_data.data_branches, ppayload)):
+        result[branch] = value
     return result
 
   def category_from_start(self, start):
@@ -437,63 +405,6 @@ class Codec():
     else:
       return None
 
-  def path_from_address(self, address):
-    try:
-      int(address, 16)
-    except:
-      return ""
-
-    if address in self.address_to_path_map.keys():
-      return self.address_to_path_map[address]
-
-    keys = self.address_map.keys()
-
-    for i, key in enumerate(keys):
-      if i + 1 == len(keys):
-        next_key = "{:04x}".format(max(int(address, 16) + 1, int(key, 16)))
-      else:
-        next_key = list(keys)[i + 1]
-
-      if clamp(int(address, 16), int(key, 16), int(next_key, 16)-1) == int(address, 16):
-        diff = int(address, 16) - int(key, 16)
-
-        for item in self.protocol[protocolKey.DATA]:
-          if self.address_map[key] in item:
-            (path, count) = path_from_count(
-              item[self.address_map[key]],
-              diff
-            )
-
-        if (count == 0):
-          full_path = "/".join([self.address_map[key]] + path)
-          self.path_to_address_map[full_path] = address
-          self.address_to_path_map[address] = full_path
-          return full_path
-        else:
-          return ""
-
-    return ""
-
-  # TODO: This doesn't work for any path which isn't at root!
-  def struct_from_address(self, address):
-    path = self.path_from_address(address)
-    for item in self.protocol[protocolKey.DATA]:
-      if path in item:
-        return item[path]
-    return None
-
-  def _count_to_path(self, root, path):
-    return count_to_path(root, path)
-
-  def _generate_address_map(self):
-    root_list = self.protocol[protocolKey.DATA]
-    for root_item in root_list:
-      for root_key in root_item.keys():
-        print(root_item[root_key])
-        if protocolKey.ADDR in root_item[root_key].keys():
-          self.address_map[root_item[root_key][protocolKey.ADDR]] = root_key
-    # Sort the map
-    self.address_map = dict(sorted(self.address_map.items()))
 
   def _generate_category_map(self):
     self.category_map = {}

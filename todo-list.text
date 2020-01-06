@@ -2,10 +2,10 @@
   [X] Import RoBus into leap
     [X] All Robus elements are renamed correctly
     [X] Structure to support packaging
-  [] Implement data processing from raw JSON data
-    [] Process the JSON data into sets of Decode/Encode data
-    [] Implement on Encode, Decode and Unpack functions
-    [] Tidy up any unneccessary methods left over
+  [X] Implement data processing from raw JSON data
+    [X] Process the JSON data into sets of Decode/Encode data
+    [X] Implement on Encode, Decode and Unpack functions
+    [X] Tidy up any unneccessary methods left over
   [X] Implement fundamental codec changes
     [X] JSON formatting with _data arrays
     [] Changes to use _addr offsets

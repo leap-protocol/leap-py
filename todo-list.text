@@ -9,8 +9,8 @@
   [X] Implement fundamental codec changes
     [X] JSON formatting with _data arrays
     [] Changes to use _addr offsets
-      [] Have all addresses assigned to each item on load to simplify address identification
-      [] Allow addresses outside of the root items
+      [X] Have all addresses assigned to each item on load to simplify address identification
+      [X] Allow addresses outside of the root items
     [X] Remove settable stuff
     [X] Add "none" as a data _type
   [] _ is no longer required since all data objects are in arrays
@@ -22,23 +22,13 @@
 
 
 
-* Want to break items down into sets of information so we no longer do searches from the raw JSON data when decoding/encoding
-* would like to have a data structure indexed by address for decoding:
-  * codec.decode_map = { addr: DecodeData }
-  * DecodeData:
-    * path = ""
-    * decendants = []
-    * types = []
-  * codec.encode_map = { path: EncodeData }
-    * addr = ""
-    * decendants = []
-    * types = []
 
 [] Add sample JSON config file to root
 
 [] Add reader module
   [] Reads JSON config files
   [] Verifies JSON Config files
+    [] Error on addresses going backwards
 
 [] Add toml configuration
 

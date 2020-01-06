@@ -33,6 +33,23 @@
         { "cpuse": { "_type": "float" } }
       ] } }
     ] } },
+    { "imu": { "_addr": "1200", "_data": [
+      { "accel": { "_data": [
+       { "x": { "_type": "float" } },
+       { "y": { "_type": "float" } },
+       { "z": { "_type": "float" } }
+      ] } },
+      { "gyros": { "_data": [
+        { "x": { "_type": "float" } },
+        { "y": { "_type": "float" } },
+        { "z": { "_type": "float" } }
+      ] } },
+      { "magne": { "_data": [
+        { "x": { "_type": "float" } },
+        { "y": { "_type": "float" } },
+        { "z": { "_type": "float" } }
+      ] } }
+    ] } },
     { "typecheck": { "_addr": "2000", "_data": [
       { "string":   { "_type": "string" } },
       { "boolean":  { "_type": "bool" } },
@@ -69,23 +86,6 @@
           { "value": { "_type": "float" } },
           { "profile": { "_type": ["flat", "square", "triangle"] } }
         ] } }
-      ] } }
-    ] } },
-    { "imu": { "_addr": "1200", "_data": [
-      { "accel": { "_data": [
-       { "x": { "_type": "float" } },
-       { "y": { "_type": "float" } },
-       { "z": { "_type": "float" } }
-      ] } },
-      { "gyros": { "_data": [
-        { "x": { "_type": "float" } },
-        { "y": { "_type": "float" } },
-        { "z": { "_type": "float" } }
-      ] } },
-      { "magne": { "_data": [
-        { "x": { "_type": "float" } },
-        { "y": { "_type": "float" } },
-        { "z": { "_type": "float" } }
       ] } }
     ] } }
   ]

@@ -1,5 +1,5 @@
 from leap import packet
-from fake import fakeCodec
+from test.fake import fakeCodec
 
 
 class TestPacketInstantiation():

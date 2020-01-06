@@ -5,16 +5,12 @@ from . import packet
 
 import json, struct
 
-class DecodeData:
-  def __init__(self, path="", decendants=[], types=[]):
-    self.path = path
-    self.decendants = decendants
-    self.types = types
 
-class EncodeData:
-  def __init__(self, addr="0000", decendants=[], types=[]):
+class ItemData:
+  def __init__(self, path = "", addr = "0000", data_branches=[], types=[]):
     self.addr = addr
-    self.decendants = decendants
+    self.path = path
+    self.data_branches = data_branches
     self.types = types
 
 class protocolKey:
@@ -267,8 +263,6 @@ class Helpers():
     count = count_to_path(protocol, None)
     addr = None
     branches = extract_branches(protocol, [])
-    print(branches)
-    types = extract_types(protocol, [])
     roots = []
     for branch in branches:
       roots.append(get_struct(protocol, branch.split('/')))
@@ -276,6 +270,7 @@ class Helpers():
     for i in range(len(roots)):
       root = roots[i]
       branch = branches[i]
+
       if protocolKey.ADDR in root:
         addr = root[protocolKey.ADDR]
       else:
@@ -284,7 +279,18 @@ class Helpers():
         else:
           addr = "{:04x}".format(int(addr,16) + 1)
 
-      _map[branch] = EncodeData(addr=addr)
+      data_branches = []
+      ends = extract_decendants(root, [])
+      for end in ends:
+
+        if end != "":
+          data_branch = '/'.join([branch, end])
+        else:
+          data_branch = branch
+        data_branches.append(data_branch)
+        print(data_branch)
+
+      _map[branch] = ItemData(addr=addr, data_branches=data_branches)
     return _map
 
   def generate_decode_map(protocol):

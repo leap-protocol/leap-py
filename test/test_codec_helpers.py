@@ -116,37 +116,7 @@ class TestCountToPath():
     result = codec.count_to_path(self.root, ["NZ", "Christchurch"])
     assert(result == expected)
 
-class TestPathFromCount():
-  def setup_method(self):
-    self.root = countries_root
 
-  def test_zero_counts(self):
-    expected = []
-    expected_count = 0
-    (result, result_count) = codec.path_from_count(self.root, 0)
-    assert(result == expected)
-    assert(result_count == expected_count)
-
-  def test_simple_counts(self):
-    expected = ["NZ", "Auckland", "Avondale"]
-    expected_count = 0
-    (result, result_count) = codec.path_from_count(self.root, 4)
-    assert(result == expected)
-    assert(result_count == expected_count)
-
-  def test_complex_counts(self):
-    expected = ["NZ", "Napier"]
-    expected_count = 0
-    (result, result_count) = codec.path_from_count(self.root, 6)
-    assert(result == expected)
-    assert(result_count == expected_count)
-
-  def test_no_result(self):
-    expected = []
-    expected_count = 3
-    (result, result_count) = codec.path_from_count(self.root, 10)
-    assert(result == expected)
-    assert(result_count == expected_count)
 
 
 

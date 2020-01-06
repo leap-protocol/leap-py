@@ -33,7 +33,6 @@ def count_depth(root):
 
 
 def count_to_path(root, path):
-
   if not protocolKey.DATA in root:
     return None
   else:
@@ -70,29 +69,6 @@ def count_to_path(root, path):
 
   return count
 
-def path_from_count(root, count):
-  path = [""]
-  if count <= 0:
-    return ([], 0)
-  else:
-    if not protocolKey.DATA in root:
-      return ([], 0)
-    else:
-      data = root[protocolKey.DATA]
-
-    for item in data:
-      name = list(item.keys()).pop()
-      count -= 1
-      path[0] = name
-      if protocolKey.TYPE not in item[name]:
-        (npath, count) = path_from_count(item[name], count)
-        path = path + npath
-      if count == 0:
-        break
-    else:
-      # did not count to 0, return an empty path
-      path = []
-  return (path, count)
 
 def get_struct(root, path):
   if path == []:
@@ -262,6 +238,7 @@ class Helpers():
     encode_map = {}
     decode_map = {}
     count = count_to_path(protocol, None)
+    # TODO Track address depth and addr
     addr = None
     branches = extract_branches(protocol, [])
     roots = []
@@ -404,7 +381,6 @@ class Codec():
       return self.category_map[start]
     else:
       return None
-
 
   def _generate_category_map(self):
     self.category_map = {}

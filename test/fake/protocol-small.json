@@ -25,6 +25,6 @@
       { "name": { "_type": "string" } },
       { "app": { "_addr": "0100", "_type": "string" } }
     ] } },
-    { "ping": { "_addr": "1000", "_type":  "bool" } }
+    { "ping": { "_addr": "1000", "_type":  "none" } }
   ]
 }

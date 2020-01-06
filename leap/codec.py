@@ -258,8 +258,9 @@ def decode_types(item, typeof):
     return None
 
 class Helpers():
-  def generate_encode_map(protocol):
-    _map = {}
+  def generate_maps(protocol):
+    encode_map = {}
+    decode_map = {}
     count = count_to_path(protocol, None)
     addr = None
     branches = extract_branches(protocol, [])
@@ -281,32 +282,26 @@ class Helpers():
 
       data_branches = []
       ends = extract_decendants(root, [])
+      types = extract_types(root, [])
       for end in ends:
-
         if end != "":
           data_branch = '/'.join([branch, end])
         else:
           data_branch = branch
         data_branches.append(data_branch)
-        print(data_branch)
 
-      _map[branch] = ItemData(addr=addr, data_branches=data_branches)
-    return _map
 
-  def generate_decode_map(protocol):
-    map = {}
-    count = count_to_path(protocol, None)
-    for i in range(count):
-      map[str(i)] = ""
-    return map
+      encode_map[branch] = ItemData(addr=addr, path=branch, data_branches=data_branches, types=types)
+      decode_map[addr] = encode_map[branch]
+    return (encode_map, decode_map)
+
 
 
 class Codec():
   def __init__(self, protocol_file_path):
     with open(protocol_file_path, "r") as protocol_file:
       self.protocol = json.load(protocol_file)
-    self.encode_map = Helpers.generate_encode_map(self.protocol)
-    self.decode_map = Helpers.generate_decode_map(self.protocol)
+    (self.encode_map, self.decode_map) = Helpers.generate_maps(self.protocol)
     self.address_map = {}
     self.address_to_path_map = {}
     self.path_to_address_map = {}

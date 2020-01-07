@@ -1,2 +1,2 @@
-from .codec import *
-from .packet import *
+from .codec import Codec
+from .packet import Packet

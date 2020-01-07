@@ -8,15 +8,15 @@
     [X] Tidy up any unneccessary methods left over
   [X] Implement fundamental codec changes
     [X] JSON formatting with _data arrays
-    [] Changes to use _addr offsets
+    [X] Changes to use _addr offsets
       [X] Have all addresses assigned to each item on load to simplify address identification
       [X] Allow addresses outside of the root items
     [X] Remove settable stuff
     [X] Add "none" as a data _type
-  [] _ is no longer required since all data objects are in arrays
-    [] Update code base/tests so _type, _addr and _data are type, addr and data
-    [] Update spec to reflect this
-  [] Put all helper functions under a Helper class
+  [X] _ is no longer required since all data objects are in arrays
+    [X] Update code base/tests so _type, _addr and _data are type, addr and data
+    [X] Update spec to reflect this
+  [X] Put all helper functions under a Helper class
   [] Take JSON processing out of codec, just pass a raw protocol object instead
 
 

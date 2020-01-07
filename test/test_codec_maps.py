@@ -1,4 +1,5 @@
 from leap import codec, packet
+from leap.helpers import itemData
 import json, os
 
 CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol-small.json"
@@ -15,7 +16,7 @@ class TestEncodeMap():
 
   def test_map_holds_encode_data(self):
     for item in self.codec.encode_map.values():
-      assert(isinstance(item, codec.ItemData))
+      assert(isinstance(item, itemData.ItemData))
 
   def test_correct_keys(self):
     expected_keys = [ "protocol", "protocol/version", "protocol/version/major", "protocol/version/minor", "protocol/version/patch",
@@ -72,7 +73,7 @@ class TestDecodeMap():
 
   def test_map_holds_decode_data(self):
     for item in self.codec.decode_map.values():
-      assert(isinstance(item, codec.ItemData))
+      assert(isinstance(item, itemData.ItemData))
 
   def test_correct_keys(self):
     expected_keys = [ "1000", "1001", "1002", "1003", "1004", "1005", "1a00", "2000" ]

@@ -16,6 +16,73 @@ class TestVerifyValid():
   def test_is_valid(self):
     assert(self.verifier.verify(self.config))
 
+
+
+
+class TestVerifyData():
+  def setup_method(self):
+    self.verifier = verify.Verifier()
+    self.valid = os.path.dirname(__file__) + "/fake/protocol.json"
+    self.config = open_config(self.valid)
+
+  def test_no_data(self):
+    self.config.pop('data', None)
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_incorrect_data_type(self):
+    self.config['data'] = {'item': {"type": "string"}}
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_data_is_empty(self):
+    self.config['data'] = []
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_data_contains_the_wrong_items(self):
+    self.config['data'] = [1, 2]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_no_data(self):
+    self.config['data'] = [{}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_too_many_keys(self):
+    self.config['data'] = [{"item1": {"type": "string"}, "item2": {"type": "string"}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_an_empty_key(self):
+    self.config['data'] = [{"": {"type": "string"}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_key_must_be_string(self):
+    self.config['data'] = [{2: {"type": "string"}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_whitespace_in_key(self):
+    self.config['data'] = [{"an item": {"type": "string"}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_invalid_character_in_key(self):
+    self.config['data'] = [{"an/item": {"type": "string"}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_invalid_value_type(self):
+    self.config['data'] = [{"item": 1}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_has_empty_map(self):
+    self.config['data'] = [{"item": {}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_item_does_not_contain_data_or_type(self):
+    self.config['data'] = [{"item": {"addr": "0000"}}]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_address_value_type(self):
+    self.config['data'][0]['protocol']['addr'] = 0x1000
+    assert(self.verifier.verify(self.config) == False)
+
+
+
 class TestVerifySymbols():
   def setup_method(self):
     self.verifier = verify.Verifier()

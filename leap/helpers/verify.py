@@ -1,4 +1,5 @@
 import re
+from . import protocolKey
 
 
 def verify(config):
@@ -25,6 +26,10 @@ class Verifier:
       self.section = "Symbols"
       return False
 
+    if self.verify_data(config, "root") == False:
+      self.section = "Data"
+      return False
+
     return True
 
   def print_failure(self):
@@ -36,6 +41,75 @@ class Verifier:
       print("Failure: {}".format(self.failure))
       print("---")
 
+  def verify_data(self, config, branch):
+    if not "data" in config:
+      self.failure = "Missing data key in {} data structure".format(branch)
+      return False
+
+    data = config["data"]
+    if not isinstance(data, list):
+      self.failure = "data in {} must be an array of items".format(branch)
+      return False
+
+    if len(data) == 0:
+      self.failure = "data in {} is empty".format(branch)
+      return False
+
+    for item in data:
+      if self.verify_item(item, branch) == False:
+        return False
+
+    return True
+
+
+  def verify_item(self, item, branch):
+    if not isinstance(item, dict):
+      self.failure = "data items in {} must be objects".format(branch)
+      return False
+
+    if len(item.keys()) != 1:
+      self.failure = "data items in {} must have only one key-pair per object".format(branch)
+      return False
+
+    for key in item.keys():
+      if not isinstance(key, str):
+        self.failure = "data item key {} in {} invalid. Keys must be strings containing only alpha numeric, dash(-) and underscore(_) characters ".format(key, branch)
+        return False
+
+      if re.match(r"^[A-Za-z0-9\-_]+$", key) == None:
+        self.failure = "data item key {} in {} invalid. Keys may only contain alpha numeric, dash(-) and underscore(_) characters ".format(key, branch)
+        return False
+
+      if branch == "root":
+        branch = key
+      else:
+        branch = branch + "/" + key
+
+      if self.verify_values(item[key], branch) == False:
+        return False
+
+    return True
+
+  def verify_values(self, values, branch):
+    if not isinstance(values, dict):
+      self.failure = "value of {} must be an object".format(branch)
+      return False
+
+    if not (protocolKey.DATA in values.keys() or protocolKey.TYPE in values.keys()):
+      self.failure = 'object in {} must have either a "{}" or "{}" key'.format(branch, protocolKey.DATA, protocolKey.TYPE)
+      return False
+
+    if protocolKey.ADDR in values.keys():
+      if self.verify_address(values[protocolKey.ADDR], branch) == False:
+        return False
+
+    return True
+
+  def verify_address(self, addr, branch):
+    if not isinstance(addr, str):
+      self.failure = '"{}" of {} must be a string'.format(protocolKey.ADDR, branch)
+      return False
+    return True
 
   def verify_symbols(self, config):
     symbols = ["separator", "compound", "end"]

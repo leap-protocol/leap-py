@@ -9,13 +9,26 @@ import json
 
 class Codec():
   def __init__(self, protocol_file_path):
-    with open(protocol_file_path, "r") as protocol_file:
-      self._protocol = json.load(protocol_file)
-    self._generate_maps(self._protocol)
-    self._generate_category_map()
+    try:
+      with open(protocol_file_path, "r") as protocol_file:
+        self._protocol = json.load(protocol_file)
+      self._is_valid = True
+    except:
+      self._is_valid = False
+
+    if self._is_valid:
+      self._generate_maps(self._protocol)
+      self._generate_category_map()
+
+
+  def valid(self):
+    return self._is_valid
 
 
   def encode(self, packets):
+    if self._is_valid == False:
+      return ""
+
     if isinstance(packets, packet.Packet):
       packets = [packets]
     elif not isinstance(packets, list):
@@ -65,6 +78,9 @@ class Codec():
   # Returns: Tuple(<byte-string> remainder, Array[<packet>] Packets)
   #
   def decode(self, encoded):
+    if self._is_valid == "false":
+      return (encoded, [])
+
     strings = encoded.split(self._protocol["end"].encode('utf-8'))
     remainder = strings[-1]
     packets = []
@@ -77,7 +93,7 @@ class Codec():
       category = None
       path = None
       start = string[0]
-      category = self.category_from_start(start)
+      category = self._category_from_start(start)
       _packet = packet.Packet(category)
       subpackets = string[1:].split(self._protocol["compound"])
       for subpacket in subpackets:
@@ -107,16 +123,16 @@ class Codec():
         result[branch] = value
     return result
 
-  def category_from_start(self, start):
-    if start in self.category_map.keys():
-      return self.category_map[start]
+  def _category_from_start(self, start):
+    if start in self._category_map.keys():
+      return self._category_map[start]
     else:
       return None
 
   def _generate_category_map(self):
-    self.category_map = {}
+    self._category_map = {}
     for key in self._protocol["category"].keys():
-      self.category_map[self._protocol["category"][key]] = key
+      self._category_map[self._protocol["category"][key]] = key
 
   def _generate_maps(self, protocol):
     encode_map = {}

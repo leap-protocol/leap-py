@@ -17,20 +17,13 @@
     [X] Update code base/tests so _type, _addr and _data are type, addr and data
     [X] Update spec to reflect this
   [X] Put all helper functions under a Helper class
-  [] Take JSON processing out of codec, just pass a raw protocol object instead
-
-
-
-
-
-[] Add sample JSON config file to root
-
-[] Add reader module
-  [] Reads JSON config files
-  [] Verifies JSON Config files
-    [] Error on addresses going backwards
-
-[] Add toml configuration
+  [X] JSON Processing can result in a valid or invalid codec
+  [X] Add sample JSON config file to root project
+  [] Add reader module
+    [] Reads JSON config files
+    [] Verifies JSON Config files
+      [] Error on addresses going backwards
+  [] Add toml configuration
 
 
 

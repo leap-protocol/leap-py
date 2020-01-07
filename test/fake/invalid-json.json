@@ -1,0 +1,30 @@
+{
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "category": {
+    "get": "G",
+    "set": "S",
+    "ack": "A",
+    "nak": "N",
+    "sub": "B",
+    "pub": "P"
+  },
+  "separator": ":",
+  "compound": "|",
+  "end": "\n",
+  "data":
+    { "protocol": { "addr": "1000", "data": [
+      { "version": { "data": [
+        { "major": { "type": "u8"  } },
+        { "minor": { "type": "u8"  } },
+        { "patch": { "type": "u16" } }
+      ] } },
+      { "name": { "type": "string" } },
+      { "app": { "addr": "0a00", "type": "string" } }
+    ] } },
+    { "ping": { "addr": "2000", "type":  "none" } }
+  ]
+}

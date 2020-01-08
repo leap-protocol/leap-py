@@ -12,8 +12,13 @@ class Verifier:
   def __init__(self):
     self.section = ""
     self.failure = ""
+    self.addr = []
+    self.current_addr = None
+    self.depth = -1
 
   def verify(self, config):
+    self.__init__()
+
     if self.verify_category(config) == False:
       self.section = "Category"
       return False
@@ -26,11 +31,47 @@ class Verifier:
       self.section = "Symbols"
       return False
 
+
     if self.verify_data(config, "root") == False:
       self.section = "Data"
       return False
 
     return True
+
+  def update_addr(self, addr, depth):
+    if addr == None:
+      if self.current_addr == None:
+        next_addr = 0
+      else:
+        next_addr = int(self.current_addr, 16)
+        next_addr += 1
+
+      if self.depth < depth:
+        self.addr.append(0)
+    else:
+      if self.depth >= depth:
+        self.addr[depth] = addr
+      else:
+        self.addr.append(addr)
+
+      next_addr = 0
+      for i in range(depth + 1):
+        next_addr += int(self.addr[i], 16)
+
+    self.depth = max(self.depth, depth)
+
+    if self.current_addr == None:
+      self.current_addr = "{:04x}".format(next_addr)
+      return True
+    elif next_addr <= int(self.current_addr, 16):
+      return False
+    elif next_addr > 0xFFFF:
+      return False
+    else:
+      self.current_addr = "{:04x}".format(next_addr)
+      return True
+
+
 
   def print_failure(self):
     if self.section != "":
@@ -76,7 +117,7 @@ class Verifier:
         self.failure = "data item key {} in {} invalid. Keys must be strings containing only alpha numeric, dash(-) and underscore(_) characters ".format(key, branch)
         return False
 
-      if re.match(r"^[A-Za-z0-9\-_]+$", key) == None:
+      if re.match(r"^[A-Za-z0-9\-_]+$", key) is None:
         self.failure = "data item key {} in {} invalid. Keys may only contain alpha numeric, dash(-) and underscore(_) characters ".format(key, branch)
         return False
 
@@ -95,27 +136,71 @@ class Verifier:
       self.failure = "value of {} must be an object".format(branch)
       return False
 
-    if not (protocolKey.DATA in values.keys() or protocolKey.TYPE in values.keys()):
-      self.failure = 'object in {} must have either a "{}" or "{}" key'.format(branch, protocolKey.DATA, protocolKey.TYPE)
+    if not (protocolKey.DATA in values.keys()) != (protocolKey.TYPE in values.keys()):
+      self.failure = 'object in {} must have either a "{}" or "{}" key, but not both'.format(branch, protocolKey.DATA, protocolKey.TYPE)
       return False
 
     if protocolKey.ADDR in values.keys():
       if self.verify_address(values[protocolKey.ADDR], branch) == False:
         return False
 
+      if self.update_addr(values[protocolKey.ADDR], branch.count('/')) == False:
+        self.failure = "TODO"
+        return False
+    else:
+      if self.update_addr(None, branch.count('/')) == False:
+        self.failure = "TODO"
+        return False
+
+    if protocolKey.TYPE in values.keys():
+      if self.verify_type(values[protocolKey.TYPE], branch) == False:
+        return False
+
+    if protocolKey.DATA in values.keys():
+      if self.verify_data(values, branch) == False:
+        return False
+
     return True
+
 
   def verify_address(self, addr, branch):
     if not isinstance(addr, str):
       self.failure = '"{}" of {} must be a string'.format(protocolKey.ADDR, branch)
       return False
+
+    if re.match(r"^[A-Fa-f0-9\-_]{4}$", addr) is None:
+      self.failure = '"{}" of "{}" in {} invalid. Addresses are four character hexidecimal strings'.format(protocolKey.ADDR, addr, branch)
+      return False
+
+    return True
+
+
+  def verify_type(self, type_, branch):
+    valid_types = ['u8', 'u16', 'u32', 'u64', 'i8', 'i16', 'i32', 'i64', 'bool', 'float', 'double', 'string', 'none']
+
+    if not (isinstance(type_, str) or isinstance(type_, list)):
+      self.failure = '"{}" of {} must be a string (or an array if enum)'.format(protocolKey.TYPE, branch)
+      return False
+
+    if isinstance(type_, str):
+      if type_ not in valid_types:
+        self.failure = 'type "{}" of {} is not a valid type, see docs for more valid types'.format(protocolKey.TYPE, branch)
+        return False
+
+    if isinstance(type_, list):
+      for item in type_:
+        if not isinstance(item, str) or re.match(r"^[A-Za-z0-9\-_]+$", item) is None:
+          self.failure = 'items {} in {} array of {} may only be strings using alpha-numeric characters, dashes (-) and underscores (_)'.format(item, protocolKey.TYPE, branch)
+          return False
+
+
     return True
 
   def verify_symbols(self, config):
     symbols = ["separator", "compound", "end"]
 
     for symbol in symbols:
-      if not symbol in config:
+      if symbol not in config:
         self.failure = "Missing {} key in root data structure".format(symbol)
         return False
 
@@ -139,7 +224,7 @@ class Verifier:
 
   def verify_category(self, config):
 
-    if not "category" in config.keys():
+    if "category" not in config.keys():
       self.failure = "Missing category key in root data structure"
       return False
 
@@ -154,7 +239,7 @@ class Verifier:
         self.failure = "Category keys must be strings"
         return False
 
-      if re.match(r"^[A-Za-z0-9\-_]+$", key) == None:
+      if re.match(r"^[A-Za-z0-9\-_]+$", key) is None:
         self.failure = "Category keys may only contain alphanumeric symbols, underscores(_) and dashes (-)"
         return False
 
@@ -163,7 +248,7 @@ class Verifier:
         self.failure = 'A category must be assigned to a single capital letter e.g. "C"'
         return False
 
-      if re.match(r"^[A-Z]{1}$", value) == None:
+      if re.match(r"^[A-Z]{1}$", value) is None:
         self.failure = 'A category must be assigned to a single capital letter e.g. "C"'
         return False
 
@@ -171,7 +256,7 @@ class Verifier:
 
 
   def verify_version(self, config):
-    if not "version" in config.keys():
+    if "version" not in config.keys():
       self.failure = "Missing version key in root data structure"
       return False
 
@@ -180,7 +265,7 @@ class Verifier:
     segments = ["major", "minor", "patch"]
 
     for segment in segments:
-      if not segment in version.keys():
+      if segment not in version.keys():
         self.failure = 'Missing "{}" in "version" data structure'
         return False
 

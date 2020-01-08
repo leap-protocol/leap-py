@@ -17,8 +17,6 @@ class TestVerifyValid():
     assert(self.verifier.verify(self.config))
 
 
-
-
 class TestVerifyData():
   def setup_method(self):
     self.verifier = verify.Verifier()
@@ -80,6 +78,62 @@ class TestVerifyData():
   def test_invalid_address_value_type(self):
     self.config['data'][0]['protocol']['addr'] = 0x1000
     assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_address_too_big(self):
+    self.config['data'][0]['protocol']['addr'] = "10000"
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_address_too_small(self):
+    self.config['data'][0]['protocol']['addr'] = "100"
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_address_not_a_number(self):
+    self.config['data'][0]['protocol']['addr'] = "FIVE"
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_address_not_hex(self):
+    self.config['data'][0]['protocol']['addr'] = "55.5"
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_cant_have_type_and_data(self):
+    self.config['data'][0]['protocol']['type'] = "bool"
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_type_not_string(self):
+    self.config['data'][1]['ping']['type'] = 1
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_type_not_valid(self):
+    self.config['data'][1]['ping']['type'] = 'invalid'
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_enum_types(self):
+    self.config['data'][1]['ping']['type'] = [1, 2, 3]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_enum_strings(self):
+    self.config['data'][1]['ping']['type'] = ["test", "test?"]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_enum_empty_string(self):
+    self.config['data'][1]['ping']['type'] = ["test", ""]
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_addr_must_increase(self):
+    self.config['data'][0]['protocol']['addr'] = "2000"
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_addr_exceeds_limit(self):
+    self.config['data'].append({ 'new' : { "addr": "FFFF", "type": "u8" }})
+    self.config['data'].append({ 'overflow' : { "type": "u8" }})
+    assert(self.verifier.verify(self.config) == False)
+
+  def test_invalid_buried_deep(self):
+    self.config['data'][3]["imu"]["data"][1]["gyros"]["data"][2]["z"] = { "type": "invalid"}
+    assert(self.verifier.verify(self.config) == False)
+
+
+
 
 
 

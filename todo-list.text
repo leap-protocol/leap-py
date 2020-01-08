@@ -23,7 +23,7 @@
     [X] Verifies Config
       [X] Error on addresses going backwards
   [] Add toml configuration
-  [] Architect the API and document it
+  [X] Architect the API and document it
 
 
 

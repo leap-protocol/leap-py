@@ -1,12 +1,25 @@
-import re
+import re, json
 from . import protocolKey
 
 
-def verify(config):
-
+def verify(config_file_path):
+  try:
+    with open(config_file_path, "r") as config_file:
+      config = json.load(config_file)
+  except Exception as e:
+    print(e)
+    print("Verification of {} failed".format(config_file_path))
+    print("Invalid JSON")
+    return False
+    
   v = Verifier()
 
-  return v.verify(config)
+  result = v.verify(config)
+  if result is False:
+    print("Verification of {} failed".format(config_file_path))
+    v.print_failure()
+
+  return result
 
 class Verifier:
   def __init__(self):

@@ -277,5 +277,5 @@ class Verifier:
       self.failure = '"version" must only contain items "major", "minor" and "patch"'
       return False
 
-
     return True
+

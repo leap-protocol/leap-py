@@ -133,10 +133,6 @@ class TestVerifyData():
     assert(self.verifier.verify(self.config) == False)
 
 
-
-
-
-
 class TestVerifySymbols():
   def setup_method(self):
     self.verifier = verify.Verifier()
@@ -203,10 +199,6 @@ class TestVerifySymbols():
     self.config['end'] = self.config['compound']
     assert(self.verifier.verify(self.config) == False)
 
-
-
-
-
 class TestVerifyCategory():
   def setup_method(self):
     self.verifier = verify.Verifier()
@@ -256,8 +248,6 @@ class TestVerifyCategory():
   def test_invalid_category_value_case(self):
     self.config['category']["tes"] = "l"
     assert(self.verifier.verify(self.config) == False)
-
-
 
 class TestVerifyVersion():
   def setup_method(self):

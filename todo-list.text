@@ -19,11 +19,11 @@
   [X] Put all helper functions under a Helper class
   [X] JSON Processing can result in a valid or invalid codec
   [X] Add sample JSON config file to root project
-  [] Add reader module
-    [] Reads JSON config files
-    [] Verifies JSON Config files
-      [] Error on addresses going backwards
+  [X] Add verifier module
+    [X] Verifies Config
+      [X] Error on addresses going backwards
   [] Add toml configuration
+  [] Architect the API and document it
 
 
 

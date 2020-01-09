@@ -1,4 +1,4 @@
-![](https://github.com/leap-protocol/leap-py/workflows/L3aP%20Unit%20Testing/badge.svg)
+![](https://github.com/leap-protocol/leap-py/workflows/L3aP-Py%20Testing/badge.svg)
 # L3aP for Python
 Legible encoding for addressable packets for python
 

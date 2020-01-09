@@ -7,7 +7,6 @@ https://leap-protocol.github.io/
 
 # Installation
 
-TODO
 `pip install leap-protocol`
 
 # Basic Usage
@@ -57,7 +56,7 @@ codec = leap.Codec("leap-config.json")
 ```
 
 ### bytes = encode(packets)
-* ***packets** either a `leap.Packet` object or a list of `leap.packet` objects.
+* **packets** either a `leap.Packet` object or a list of `leap.packet` objects.
 * **bytes** utf-8 byte string
 
 Encodes one or more packets into a utf-8 byte string.

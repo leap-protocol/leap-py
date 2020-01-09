@@ -40,8 +40,11 @@ def verify(config_file_path):
     print("Verification of {} failed".format(config_file_path))
     v.print_failure()
     print(config)
+    return False
+  else:
+    print("Verification of {} passed".format(config_file_path))
+    return True
 
-  return result
 
 class Verifier:
   def __init__(self):

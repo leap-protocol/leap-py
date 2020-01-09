@@ -5,18 +5,21 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="leap-protocol",
-    version="1.0.0",
+    version="1.0.1000",
     author="Hoani Brysonr",
     author_email="hoani.bryson@gmail.com",
     description="Legible Encoding for Addressable Packets",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pypa/sampleproject",
-    packages=setuptools.find_packages(exclude=["test"]),
+    packages=setuptools.find_packages(exclude=["test", "*fake*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+    ],
+    install_requires=[
+          'toml',
     ],
     python_requires='>=3.6',
 )

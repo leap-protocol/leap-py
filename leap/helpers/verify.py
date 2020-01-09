@@ -1,23 +1,37 @@
-import re, json
+import re, json, toml
 from . import protocolKey
 
 
 def verify(config_file_path):
   try:
+    config_file = open(config_file_path, "r")
+  except:
+    print("File {} cannot be opened, maybe it doesn't exist?".format(config_file_path))
+    return False
+  config_file.close()
+
+  try:
     with open(config_file_path, "r") as config_file:
       config = json.load(config_file)
-  except Exception as e:
-    print(e)
-    print("Verification of {} failed".format(config_file_path))
-    print("Invalid JSON")
-    return False
-    
+  except:
+    try:
+      with open(config_file_path, "r") as config_file:
+        config = toml.load(config_file)
+    except:
+      print("Verification of {} failed".format(config_file_path))
+      print("Invalid JSON/TOML")
+      config_file.close()
+      return False
+
+  config_file.close()
+
   v = Verifier()
 
   result = v.verify(config)
   if result is False:
     print("Verification of {} failed".format(config_file_path))
     v.print_failure()
+    print(config)
 
   return result
 
@@ -77,8 +91,10 @@ class Verifier:
       self.current_addr = "{:04x}".format(next_addr)
       return True
     elif next_addr <= int(self.current_addr, 16):
+      self.failure = "Next address {:04x} is lower than previous address {:04x}".format(next_addr, int(self.current_addr, 16))
       return False
     elif next_addr > 0xFFFF:
+      self.failure = "Next address 0x{:x} has overrun 0xFFFF".format(next_addr)
       return False
     else:
       self.current_addr = "{:04x}".format(next_addr)
@@ -158,11 +174,11 @@ class Verifier:
         return False
 
       if self.update_addr(values[protocolKey.ADDR], branch.count('/')) == False:
-        self.failure = "TODO"
+        self.failure += " at {}".format(branch)
         return False
     else:
       if self.update_addr(None, branch.count('/')) == False:
-        self.failure = "TODO"
+        self.failure += " at {}".format(branch)
         return False
 
     if protocolKey.TYPE in values.keys():

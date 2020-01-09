@@ -1,0 +1,35 @@
+separator = ":"
+compound = "|"
+end = "\n"
+
+[version]
+  major = 1
+  minor = 0
+  patch = 0
+
+[category]
+  get = "G"
+  set = "S"
+  ack = "A"
+  nak = "N"
+  sub = "B"
+  pub = "P"
+
+[[data]]
+  [data.protocol]
+    addr = "1000"
+    [[data.protocol.data]]
+      [data.protocol.data.version]
+        [[data.protocol.data.version.data]]
+          major = { type = "u8" }
+        [[data.protocol.data.version.data]]
+          minor = { type = "u8" }
+        [[data.protocol.data.version.data]]
+          patch = { type = "u16" }
+    [[data.protocol.data]]
+      name = { type = "string" }
+    [[data.protocol.data]]
+      app = { addr = "0a00", type = "string" }
+[[data]]
+  ping = { addr = "2000", type = "none" }
+

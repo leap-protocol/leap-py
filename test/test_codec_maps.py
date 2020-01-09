@@ -2,7 +2,7 @@ from leap import codec, packet
 from leap.helpers import itemData
 import json, os
 
-CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol-small.json"
+CONFIG_PATH = os.path.dirname(__file__) + "/fake/protocol-small.toml"
 
 class TestEncodeMap():
   def setup_method(self):

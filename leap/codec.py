@@ -4,7 +4,7 @@
 from . import packet
 from .helpers import typeHelper, explore, protocolKey, itemData
 
-import json
+import json, toml
 
 
 class Codec():
@@ -15,6 +15,15 @@ class Codec():
       self._is_valid = True
     except:
       self._is_valid = False
+
+    if self._is_valid == False:
+      try:
+        with open(protocol_file_path, "r") as protocol_file:
+          self._protocol = toml.load(protocol_file)
+        self._is_valid = True
+      except:
+        self._is_valid = False
+
 
     if self._is_valid:
       self._generate_maps(self._protocol)

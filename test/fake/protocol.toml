@@ -1,0 +1,139 @@
+separator = ":"
+compound = "|"
+end = "\n"
+
+[version]
+  major = 1
+  minor = 0
+  patch = 0
+
+[category]
+  get = "G"
+  set = "S"
+  ack = "A"
+  nak = "N"
+  sub = "B"
+  pub = "P"
+
+
+[[data]]
+  [data.protocol]
+    addr = "0000"
+    [[data.protocol.data]]
+      [data.protocol.data.version]
+        [[data.protocol.data.version.data]]
+          major = { type = "u8" }
+        [[data.protocol.data.version.data]]
+          minor = { type = "u8" }
+        [[data.protocol.data.version.data]]
+          patch = { type = "u16" }
+    [[data.protocol.data]]
+      name = { type = "string" }
+[[data]]
+  [data.ping]
+    addr = "1000"
+    type = "bool"
+[[data]]
+  [data.health]
+    addr = "1100"
+    [[data.health.data]]
+      [data.health.data.batt]
+        [[data.health.data.batt.data]]
+          v = { type = "float" }
+    [[data.health.data]]
+      [data.health.data.os]
+        [[data.health.data.os.data]]
+          cpuse = { type = "float" }
+[[data]]
+  [data.imu]
+    addr = "1200"
+    [[data.imu.data]]
+      [data.imu.data.accel]
+        [[data.imu.data.accel.data]]
+          x = { type = "float" }
+        [[data.imu.data.accel.data]]
+          y = { type = "float" }
+        [[data.imu.data.accel.data]]
+          z = { type = "float" }
+    [[data.imu.data]]
+      [data.imu.data.gyros]
+        [[data.imu.data.gyros.data]]
+          x = { type = "float" }
+        [[data.imu.data.gyros.data]]
+          y = { type = "float" }
+        [[data.imu.data.gyros.data]]
+          z = { type = "float" }
+    [[data.imu.data]]
+      [data.imu.data.magne]
+        [[data.imu.data.magne.data]]
+          x = { type = "float" }
+        [[data.imu.data.magne.data]]
+          y = { type = "float" }
+        [[data.imu.data.magne.data]]
+          z = { type = "float" }
+[[data]]
+  [data.typecheck]
+    addr = "2000"
+    [[data.typecheck.data]]
+      string = { type = "string" }
+    [[data.typecheck.data]]
+      boolean = { type = "bool" }
+    [[data.typecheck.data]]
+      uint8 = { type = "u8" }
+    [[data.typecheck.data]]
+      uint16 = { type = "u16" }
+    [[data.typecheck.data]]
+      uint32 = { type = "u32" }
+    [[data.typecheck.data]]
+      uint64 = { type = "u64" }
+    [[data.typecheck.data]]
+      int8 = { type = "i8" }
+    [[data.typecheck.data]]
+      int16 = { type = "i16" }
+    [[data.typecheck.data]]
+      int32 = { type = "i32" }
+    [[data.typecheck.data]]
+      int64 = { type = "i64" }
+    [[data.typecheck.data]]
+      float = { type = "float" }
+    [[data.typecheck.data]]
+      double = { type = "double" }
+    [[data.typecheck.data]]
+      enum = { type = [ "item_1", "item_2", "item_3", "item_4",] }
+    [[data.typecheck.data]]
+      none = { type = "none" }
+[[data]]
+  [data.control]
+    addr = "8000"
+    [[data.control.data]]
+      disable = { type = "none"}
+    [[data.control.data]]
+      [data.control.data.manual]
+        [[data.control.data.manual.data]]
+          direction = { type = [ "FW", "BW", "LT", "RT",] }
+        [[data.control.data.manual.data]]
+          speed = { type = "float" }
+        [[data.control.data.manual.data]]
+          duration = { type = "float" }
+    [[data.control.data]]
+      [data.control.data.automatic]
+        [[data.control.data.automatic.data]]
+          speed = { type = "float" }
+    [[data.control.data]]
+      [data.control.data.pid]
+        [[data.control.data.pid.data]]
+          [data.control.data.pid.data.gains]
+            [[data.control.data.pid.data.gains.data]]
+              kp = { type = "float" }
+            [[data.control.data.pid.data.gains.data]]
+              ki = { type = "float" }
+            [[data.control.data.pid.data.gains.data]]
+              kd = { type = "float" }
+        [[data.control.data.pid.data]]
+          [data.control.data.pid.data.setpoint]
+            [[data.control.data.pid.data.setpoint.data]]
+              value = { type = "float" }
+            [[data.control.data.pid.data.setpoint.data]]
+              profile = { type = [ "flat", "square", "triangle",] }
+
+

@@ -23,6 +23,7 @@
     [X] Verifies Config
       [X] Error on addresses going backwards
   [] Add toml configuration
+  [] Add to verifier module a check for an empty config (by default it complains about category first)
   [X] Architect the API and document it
 
 

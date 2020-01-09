@@ -1,27 +1,48 @@
 from leap.helpers import verify
-import json, os
+import json, toml, os
 
 
-def open_config(filepath):
+def open_json(filepath):
   with open(filepath, "r") as protocol_file:
     config = json.load(protocol_file)
+  return config
+
+def open_toml(filepath):
+  with open(filepath, "r") as protocol_file:
+    config = toml.load(protocol_file)
   return config
 
 class TestVerifyValid():
   def setup_method(self):
     self.verifier = verify.Verifier()
-    self.valid = os.path.dirname(__file__) + "/fake/protocol.json"
-    self.config = open_config(self.valid)
+    self.valid_json = os.path.dirname(__file__) + "/fake/protocol.json"
+    self.valid_small_json = os.path.dirname(__file__) + "/fake/protocol-small.json"
+    self.valid_toml = os.path.dirname(__file__) + "/fake/protocol.toml"
+    self.valid_small_toml = os.path.dirname(__file__) + "/fake/protocol-small.toml"
 
-  def test_is_valid(self):
-    assert(self.verifier.verify(self.config))
+
+  def test_valid_json(self):
+    config = open_json(self.valid_json)
+    assert(self.verifier.verify(config))
+
+  def test_valid_small_json(self):
+    config = open_json(self.valid_small_json)
+    assert(self.verifier.verify(config))
+
+  def test_valid_toml(self):
+    config = open_toml(self.valid_toml)
+    assert(self.verifier.verify(config))
+
+  def test_valid_small_toml(self):
+    config = open_toml(self.valid_small_toml)
+    assert(self.verifier.verify(config))
 
 
 class TestVerifyData():
   def setup_method(self):
     self.verifier = verify.Verifier()
     self.valid = os.path.dirname(__file__) + "/fake/protocol.json"
-    self.config = open_config(self.valid)
+    self.config = open_json(self.valid)
 
   def test_no_data(self):
     self.config.pop('data', None)
@@ -137,7 +158,7 @@ class TestVerifySymbols():
   def setup_method(self):
     self.verifier = verify.Verifier()
     self.valid = os.path.dirname(__file__) + "/fake/protocol.json"
-    self.config = open_config(self.valid)
+    self.config = open_json(self.valid)
 
   def test_no_separator(self):
     self.config.pop('separator', None)
@@ -203,7 +224,7 @@ class TestVerifyCategory():
   def setup_method(self):
     self.verifier = verify.Verifier()
     self.valid = os.path.dirname(__file__) + "/fake/protocol.json"
-    self.config = open_config(self.valid)
+    self.config = open_json(self.valid)
 
   def test_no_category(self):
     self.config.pop('category', None)
@@ -253,7 +274,7 @@ class TestVerifyVersion():
   def setup_method(self):
     self.verifier = verify.Verifier()
     self.valid = os.path.dirname(__file__) + "/fake/protocol.json"
-    self.config = open_config(self.valid)
+    self.config = open_json(self.valid)
 
   def test_no_version(self):
     self.config.pop('version', None)

@@ -147,7 +147,6 @@ class Codec():
     encode_map = {}
     decode_map = {}
     count = explore.count_to_path(protocol, None)
-    # TODO Track address depth and addr
     addr_path = []
     addr = 0
     prev_depth = 0

@@ -1,4 +1,4 @@
-name: L3aP Unit Testing
+name: L3aP-Py Testing
 
 on: [push]
 
@@ -28,3 +28,9 @@ jobs:
       run: |
         pip install pytest
         pytest
+    - name: Test command-line file-gen
+      run: |
+        python -m leap --json default.json
+        python -m leap --toml default.toml
+        python -m leap --verify default.json
+        python -m leap --verify default.toml

@@ -10,6 +10,8 @@ def verify(config_file_path):
     return False
   config_file.close()
 
+  invalid = False
+
   try:
     with open(config_file_path, "r") as config_file:
       config = json.load(config_file)
@@ -18,10 +20,16 @@ def verify(config_file_path):
       with open(config_file_path, "r") as config_file:
         config = toml.load(config_file)
     except:
-      print("Verification of {} failed".format(config_file_path))
-      print("Invalid JSON/TOML")
-      config_file.close()
-      return False
+      invalid = True
+
+  if config == {}:
+    invalid = True
+
+  if invalid:
+    print("Verification of {} failed".format(config_file_path))
+    print("Invalid JSON/TOML")
+    config_file.close()
+    return False
 
   config_file.close()
 
@@ -46,6 +54,12 @@ class Verifier:
   def verify(self, config):
     self.__init__()
 
+    if len(config) == 0:
+      self.section = "Config"
+      self.print_failure = "Configuration is empty"
+      return False
+
+
     if self.verify_category(config) == False:
       self.section = "Category"
       return False
@@ -57,7 +71,6 @@ class Verifier:
     if self.verify_symbols(config) == False:
       self.section = "Symbols"
       return False
-
 
     if self.verify_data(config, "root") == False:
       self.section = "Data"

@@ -22,8 +22,10 @@
   [X] Add verifier module
     [X] Verifies Config
       [X] Error on addresses going backwards
-  [] Add toml configuration
-  [] Add to verifier module a check for an empty config (by default it complains about category first)
+  [X] Add toml configuration
+  [X] Add to verifier module a check for an empty config (by default it complains about category first)
+  [X] Add TOML/JSON generation to documentation
+  [X] Add integration testing for generating and verifying files
   [X] Architect the API and document it
 
 

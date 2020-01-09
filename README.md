@@ -2,12 +2,12 @@
 # L3aP for Python
 Legible encoding for addressable packets for python
 
-Specification documentation: 
+Specification documentation:
 https://leap-protocol.github.io/
 
 # Installation
 
-TODO 
+TODO
 `pip install leap-protocol`
 
 # Basic Usage
@@ -32,12 +32,12 @@ codec = leap.Codec("leap-config.json")
 ...
 
 # Note, if there is a remainder it will be stored back in bytes
-received, packet = codec.Decode(received) 
+received, packet = codec.Decode(received)
 data = codec.unpack(packet)
 
 for branch, value in data.items():
   ... do stuff ...
-  
+
 ...
 ```
 
@@ -82,7 +82,7 @@ Example:
 received_bytes += rx.read()
 received_bytes, packets = codec.decode(received_bytes)
 
-for packet in packets: 
+for packet in packets:
   ...
 ```
 
@@ -122,7 +122,7 @@ disable_packet = leap.Packet("set", "control/balance/disable")
 * **path** a root path of payload data
 * **payload** (optional) the data to accompany the root path
 
-Adds path to the packet and optionally a payload. 
+Adds path to the packet and optionally a payload.
 This can be used to create compound packets which allows sets of data to be processed at the same time.
 
 Example:
@@ -158,5 +158,23 @@ def test_valid_config(self):
   assert(leap.verify("leap-config.json"))
 ...
 ```
+
+# Command Line
+
+Generate a default json config file:
+
+`python3 -m leap --json filename.toml`
+
+Generate a default toml config file:
+
+`python3 -m leap --toml filename.toml`
+
+Verify the contents of your toml/json config file:
+
+`python3 -m leap --validate filename.json`
+
+Help:
+
+`python3 -m leap --help`
 
 

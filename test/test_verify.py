@@ -12,14 +12,13 @@ def open_toml(filepath):
     config = toml.load(protocol_file)
   return config
 
-class TestVerifyValid():
+class TestVerifyBasic():
   def setup_method(self):
     self.verifier = verify.Verifier()
     self.valid_json = os.path.dirname(__file__) + "/fake/protocol.json"
     self.valid_small_json = os.path.dirname(__file__) + "/fake/protocol-small.json"
     self.valid_toml = os.path.dirname(__file__) + "/fake/protocol.toml"
     self.valid_small_toml = os.path.dirname(__file__) + "/fake/protocol-small.toml"
-
 
   def test_valid_json(self):
     config = open_json(self.valid_json)
@@ -36,6 +35,10 @@ class TestVerifyValid():
   def test_valid_small_toml(self):
     config = open_toml(self.valid_small_toml)
     assert(self.verifier.verify(config))
+
+  def test_valid_empty(self):
+    config = {}
+    assert(self.verifier.verify(config) == False)
 
 
 class TestVerifyData():

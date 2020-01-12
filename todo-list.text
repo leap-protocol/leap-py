@@ -1,32 +1,6 @@
-[] Publish first leap package onto PyPi
-  [X] Import RoBus into leap
-    [X] All Robus elements are renamed correctly
-    [X] Structure to support packaging
-  [X] Implement data processing from raw JSON data
-    [X] Process the JSON data into sets of Decode/Encode data
-    [X] Implement on Encode, Decode and Unpack functions
-    [X] Tidy up any unneccessary methods left over
-  [X] Implement fundamental codec changes
-    [X] JSON formatting with _data arrays
-    [X] Changes to use _addr offsets
-      [X] Have all addresses assigned to each item on load to simplify address identification
-      [X] Allow addresses outside of the root items
-    [X] Remove settable stuff
-    [X] Add "none" as a data _type
-  [X] _ is no longer required since all data objects are in arrays
-    [X] Update code base/tests so _type, _addr and _data are type, addr and data
-    [X] Update spec to reflect this
-  [X] Put all helper functions under a Helper class
-  [X] JSON Processing can result in a valid or invalid codec
-  [X] Add sample JSON config file to root project
-  [X] Add verifier module
-    [X] Verifies Config
-      [X] Error on addresses going backwards
-  [X] Add toml configuration
-  [X] Add to verifier module a check for an empty config (by default it complains about category first)
-  [X] Add TOML/JSON generation to documentation
-  [X] Add integration testing for generating and verifying files
-  [X] Architect the API and document it
+[] Add license headers
+[X] Codec calls the validator on load
+[X] Add explore tests defined in leap-js
 
 
 

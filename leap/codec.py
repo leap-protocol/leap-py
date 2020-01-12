@@ -2,7 +2,7 @@
 # 2019 (C) Hoani Bryson
 
 from . import packet
-from .helpers import typeHelper, explore, protocolKey, itemData
+from .helpers import typeHelper, explore, protocolKey, itemData, verify
 
 import json, toml
 
@@ -24,10 +24,15 @@ class Codec():
       except:
         self._is_valid = False
 
-
     if self._is_valid:
-      self._generate_maps(self._protocol)
-      self._generate_category_map()
+      v = verify.Verifier()
+      if v.verify(self._protocol):
+        self._generate_maps(self._protocol)
+        self._generate_category_map()
+      else:
+        print("Verification of {} failed".format(config_file_path))
+        v.print_failure()
+        self._is_valid = False
 
 
   def valid(self):

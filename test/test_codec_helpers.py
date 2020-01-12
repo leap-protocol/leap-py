@@ -118,6 +118,52 @@ class TestCountToPath():
     assert(result == expected)
 
 
+class TestExtractDecendants():
+  def setup_method(self):
+    protocol_file_path = CONFIG_PATH
+    _codec = codec.Codec(protocol_file_path)
+    self.data = _codec._protocol
 
+  def test_no_decendant(self):
+    expected = [""]
+    result = explore.extract_decendants(self.data, ["ping"])
+    assert(result == expected)
+
+  def test_multiple_decendants(self):
+    expected = ["major", "minor", "patch"]
+    result = explore.extract_decendants(self.data, ["protocol", "version"])
+    assert(result == expected)
+
+  def test_multilevel(self):
+    expected = ["version/major", "version/minor", "version/patch", "name"]
+    result = explore.extract_decendants(self.data, ["protocol"])
+    assert(result == expected)
+
+
+class TestExtractBranches():
+  def setup_method(self):
+    protocol_file_path = CONFIG_PATH
+    _codec = codec.Codec(protocol_file_path)
+    self.data = _codec._protocol
+
+  def test_none(self):
+    expected = [""]
+    result = explore.extract_branches(self.data, ["health", "batt", "v"])
+    assert(result == expected)
+
+  def test_single(self):
+    expected = ["v"]
+    result = explore.extract_branches(self.data, ["health", "batt"])
+    assert(result == expected)
+
+  def test_multiple(self):
+    expected = ["major", "minor", "patch"]
+    result = explore.extract_branches(self.data, ["protocol", "version"])
+    assert(result == expected)
+
+  def test_multilevel(self):
+    expected = ["version", "version/major", "version/minor", "version/patch", "name"]
+    result = explore.extract_branches(self.data, ["protocol"])
+    assert(result == expected)
 
 

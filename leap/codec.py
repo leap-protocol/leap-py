@@ -63,9 +63,6 @@ class Codec():
           if internal != "":
             internal += self._config["compound"]
 
-          path = ppath.split("/")
-          root = explore.get_struct(self._config, [path[0]])
-
           if ppath in self.encode_map:
             encode_data = self.encode_map[ppath]
           else:

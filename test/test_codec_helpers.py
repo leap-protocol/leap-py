@@ -54,7 +54,7 @@ class TestExtractTypes():
   def setup_method(self):
     protocol_file_path = CONFIG_PATH
     _codec = codec.Codec(protocol_file_path)
-    self.data = _codec._protocol
+    self.data = _codec._config
 
   def test_simple_type(self):
     expected = ["bool"]
@@ -122,7 +122,7 @@ class TestExtractDecendants():
   def setup_method(self):
     protocol_file_path = CONFIG_PATH
     _codec = codec.Codec(protocol_file_path)
-    self.data = _codec._protocol
+    self.data = _codec._config
 
   def test_no_decendant(self):
     expected = [""]
@@ -144,7 +144,7 @@ class TestExtractBranches():
   def setup_method(self):
     protocol_file_path = CONFIG_PATH
     _codec = codec.Codec(protocol_file_path)
-    self.data = _codec._protocol
+    self.data = _codec._config
 
   def test_none(self):
     expected = [""]

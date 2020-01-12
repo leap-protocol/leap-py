@@ -8,26 +8,26 @@ import json, toml
 
 
 class Codec():
-  def __init__(self, protocol_file_path):
+  def __init__(self, config_file_path):
     try:
-      with open(protocol_file_path, "r") as protocol_file:
-        self._protocol = json.load(protocol_file)
+      with open(config_file_path, "r") as config_file:
+        self._config = json.load(config_file)
       self._is_valid = True
     except:
       self._is_valid = False
 
     if self._is_valid == False:
       try:
-        with open(protocol_file_path, "r") as protocol_file:
-          self._protocol = toml.load(protocol_file)
+        with open(config_file_path, "r") as config_file:
+          self._config = toml.load(config_file)
         self._is_valid = True
       except:
         self._is_valid = False
 
     if self._is_valid:
       v = verify.Verifier()
-      if v.verify(self._protocol):
-        self._generate_maps(self._protocol)
+      if v.verify(self._config):
+        self._generate_maps(self._config)
         self._generate_category_map()
       else:
         print("Verification of {} failed".format(config_file_path))
@@ -51,9 +51,9 @@ class Codec():
     encoded = ""
     for _packet in packets:
       if encoded != "":
-        encoded += self._protocol["end"]
+        encoded += self._config["end"]
 
-      encoded += self._protocol["category"][_packet.category]
+      encoded += self._config["category"][_packet.category]
 
       internal = ""
 
@@ -61,10 +61,10 @@ class Codec():
       for (ppath, ppayload) in paths_and_payloads:
         if ppath != None:
           if internal != "":
-            internal += self._protocol["compound"]
+            internal += self._config["compound"]
 
           path = ppath.split("/")
-          root = explore.get_struct(self._protocol, [path[0]])
+          root = explore.get_struct(self._config, [path[0]])
 
           if ppath in self.encode_map:
             encode_data = self.encode_map[ppath]
@@ -78,12 +78,12 @@ class Codec():
 
             count = min(len(encode_data.types), len(ppayload))
             for i in range(count):
-              internal += self._protocol["separator"]
+              internal += self._config["separator"]
               internal += typeHelper.encode_types(ppayload[i], encode_data.types[i])
 
       encoded += internal
 
-    encoded += self._protocol["end"]
+    encoded += self._config["end"]
     return encoded.encode('utf-8')
 
 
@@ -95,7 +95,7 @@ class Codec():
     if self._is_valid == "false":
       return (encoded, [])
 
-    strings = encoded.split(self._protocol["end"].encode('utf-8'))
+    strings = encoded.split(self._config["end"].encode('utf-8'))
     remainder = strings[-1]
     packets = []
     if len(strings) == 1:
@@ -109,9 +109,9 @@ class Codec():
       start = string[0]
       category = self._category_from_start(start)
       _packet = packet.Packet(category)
-      subpackets = string[1:].split(self._protocol["compound"])
+      subpackets = string[1:].split(self._config["compound"])
       for subpacket in subpackets:
-        parts = subpacket.split(self._protocol["separator"])
+        parts = subpacket.split(self._config["separator"])
         if parts != ['']:
           payload = []
           addr = parts[0]
@@ -145,8 +145,8 @@ class Codec():
 
   def _generate_category_map(self):
     self._category_map = {}
-    for key in self._protocol["category"].keys():
-      self._category_map[self._protocol["category"][key]] = key
+    for key in self._config["category"].keys():
+      self._category_map[self._config["category"][key]] = key
 
   def _generate_maps(self, protocol):
     encode_map = {}

@@ -1,9 +1,9 @@
-![](https://github.com/leap-protocol/leap-py/workflows/L3aP-Py%20Testing/badge.svg)
+[![](https://github.com/leap-protocol/leap-py/workflows/L3aP-Py%20Testing/badge.svg)](https://github.com/leap-protocol/leap-py/)
+
+* [Specification documentation](https://leap-protocol.github.io/)
+
 # L3aP for Python
 Legible encoding for addressable packets for python
-
-Specification documentation:
-https://leap-protocol.github.io/
 
 # Installation
 

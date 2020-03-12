@@ -112,7 +112,7 @@ class TestSetPayloadDecodeMultiple():
 
   def test_non_sequential(self):
     expected = packet.Packet("set", "protocol", tuple([0x12, 0x34, 0x567, "Hoani"]))
-    (_, [result]) = self.codec.decode(("S0000:12:34:0567:Hoani\n").encode('utf-8'))
+    (_, [result]) = self.codec.decode(("S0000:12:34:0567:486f616e69\n").encode('utf-8'))
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)
@@ -139,7 +139,7 @@ class TestSetPayloadDecodeSingle():
 
   def test_simple_string(self):
     expected = packet.Packet("set", "typecheck/string", tuple(["Hoani's String"]))
-    (_, [result]) = self.codec.decode(("S2001:Hoani's String\n").encode('utf-8'))
+    (_, [result]) = self.codec.decode(("S2001:486f616e69277320537472696e67\n").encode('utf-8'))
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)

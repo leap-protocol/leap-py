@@ -1,6 +1,11 @@
-[] Add license headers
-[X] Codec calls the validator on load
-[X] Add explore tests defined in leap-js
+[] Add license headers:
+// Copyright © 2020 Hoani Bryson
+// License: MIT (https://mit-license.org/)
+//
+// Codec
+//
+// L3aP codec for encoding and decoding packets
+//
 
 
 

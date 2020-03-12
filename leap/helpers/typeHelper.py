@@ -18,7 +18,10 @@ def encode_types(item, typeof):
     item = clamp(item, -0x80000000, 0x7FFFFFFF)
     return "{:08x}".format(item + 0x100000000 if item < 0 else item)
   elif typeof == "string":
-    return item
+    value = ""
+    for c in item:
+      value += "{:02x}".format(clamp(ord(c), 0x00, 0xff))
+    return value
   elif typeof == "bool":
     return "1" if item == True else "0"
   elif typeof == "float":
@@ -65,7 +68,10 @@ def decode_types(item, typeof):
   elif typeof == "i32":
     return decode_signed(item, 32)
   elif typeof == "string":
-    return item
+    value = ""
+    for i in range(len(item))[::2]:
+      value += chr(decode_unsigned(item[i:i+2], 8))
+    return value
   elif typeof == "bool":
     return True if item == "1" else False
   elif typeof == "float":

@@ -117,7 +117,7 @@ class TestSetPacketEncodeMultiple():
     assert(result == expected)
 
   def test_non_sequential(self):
-    expected = ("S0000:12:34:0567:Hoani\n").encode('utf-8')
+    expected = ("S0000:12:34:0567:486f616e69\n").encode('utf-8')
     _packet = packet.Packet("set", "protocol", tuple([0x12, 0x34, 0x567, "Hoani"]))
     result = self.codec.encode(_packet)
     assert(result == expected)
@@ -141,7 +141,7 @@ class TestSetPacketEncodeSingle():
     self.codec = codec.Codec(protocol_file_path)
 
   def test_simple_string(self):
-    expected = ("S2001:Hoani's String\n").encode('utf-8')
+    expected = ("S2001:486f616e69277320537472696e67\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/string", tuple(["Hoani's String"]))
     result = self.codec.encode(_packet)
     assert(result == expected)

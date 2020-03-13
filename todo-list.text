@@ -1,11 +1,11 @@
 [] Add license headers:
-// Copyright © 2020 Hoani Bryson
-// License: MIT (https://mit-license.org/)
-//
-// Codec
-//
-// L3aP codec for encoding and decoding packets
-//
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Codec
+#
+# L3aP codec for encoding and decoding packets
+#
 
 
 

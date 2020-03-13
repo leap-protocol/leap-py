@@ -1,3 +1,12 @@
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Type Helper
+#
+# Encodes and Decodes data items based on thier type as per L3aP protocol
+#
+
+
 import struct
 
 

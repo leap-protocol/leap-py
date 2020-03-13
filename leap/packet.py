@@ -1,5 +1,10 @@
-# RoBus Codec
-# 2019 (C) Hoani Bryson
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Packet
+#
+# L3aP packet for describing data fields
+#
 
 class Packet():
   def __init__(self, category, path=None, payload=None):

@@ -85,11 +85,15 @@ end = "\n"
     [[data.typecheck.data]]
       uint32 = { type = "u32" }
     [[data.typecheck.data]]
+      uint32-2 = { type = "u32" }
+    [[data.typecheck.data]]
       int8 = { type = "i8" }
     [[data.typecheck.data]]
       int16 = { type = "i16" }
     [[data.typecheck.data]]
       int32 = { type = "i32" }
+    [[data.typecheck.data]]
+      int32-2 = { type = "i32" }
     [[data.typecheck.data]]
       float = { type = "float" }
     [[data.typecheck.data]]

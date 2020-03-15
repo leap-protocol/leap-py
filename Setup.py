@@ -6,12 +6,12 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="leap-protocol",
     version="1.0.1",
-    author="Hoani Brysonr",
+    author="Hoani Bryson",
     author_email="hoani.bryson@gmail.com",
     description="Legible Encoding for Addressable Packets",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/leap-protocol/leap-py",
     packages=setuptools.find_packages(exclude=["test", "*fake*"]),
     classifiers=[
         "Programming Language :: Python :: 3",

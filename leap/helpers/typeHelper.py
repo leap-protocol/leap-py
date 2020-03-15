@@ -1,3 +1,12 @@
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Type Helper
+#
+# Encodes and Decodes data items based on thier type as per L3aP protocol
+#
+
+
 import struct
 
 
@@ -8,8 +17,6 @@ def encode_types(item, typeof):
     return "{:04x}".format(clamp(item, 0x0000, 0xffff))
   elif typeof == "u32":
     return "{:08x}".format(clamp(item, 0x00000000, 0xffffffff))
-  elif typeof == "u64":
-    return "{:016x}".format(clamp(item, 0x0000000000000000, 0xffffffffffffffff))
   if typeof == "i8":
     item = clamp(item, -0x80, 0x7F)
     return "{:02x}".format(item + 0x100 if item < 0 else item)
@@ -19,11 +26,11 @@ def encode_types(item, typeof):
   elif typeof == "i32":
     item = clamp(item, -0x80000000, 0x7FFFFFFF)
     return "{:08x}".format(item + 0x100000000 if item < 0 else item)
-  elif typeof == "i64":
-    item = clamp(item, -0x8000000000000000, 0x7FFFFFFFFFFFFFFF)
-    return "{:016x}".format(item + 0x10000000000000000 if item < 0 else item)
   elif typeof == "string":
-    return item
+    value = ""
+    for c in item:
+      value += "{:02x}".format(clamp(ord(c), 0x00, 0xff))
+    return value
   elif typeof == "bool":
     return "1" if item == True else "0"
   elif typeof == "float":
@@ -63,18 +70,17 @@ def decode_types(item, typeof):
     return decode_unsigned(item, 16)
   elif typeof == "u32":
     return decode_unsigned(item, 32)
-  elif typeof == "u64":
-    return decode_unsigned(item, 64)
   if typeof == "i8":
     return decode_signed(item, 8)
   elif typeof == "i16":
     return decode_signed(item, 16)
   elif typeof == "i32":
     return decode_signed(item, 32)
-  elif typeof == "i64":
-    return decode_signed(item,64)
   elif typeof == "string":
-    return item
+    value = ""
+    for i in range(len(item))[::2]:
+      value += chr(decode_unsigned(item[i:i+2], 8))
+    return value
   elif typeof == "bool":
     return True if item == "1" else False
   elif typeof == "float":

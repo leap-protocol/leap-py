@@ -112,7 +112,7 @@ class TestSetPayloadDecodeMultiple():
 
   def test_non_sequential(self):
     expected = packet.Packet("set", "protocol", tuple([0x12, 0x34, 0x567, "Hoani"]))
-    (_, [result]) = self.codec.decode(("S0000:12:34:0567:Hoani\n").encode('utf-8'))
+    (_, [result]) = self.codec.decode(("S0000:12:34:0567:486f616e69\n").encode('utf-8'))
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)
@@ -139,7 +139,7 @@ class TestSetPayloadDecodeSingle():
 
   def test_simple_string(self):
     expected = packet.Packet("set", "typecheck/string", tuple(["Hoani's String"]))
-    (_, [result]) = self.codec.decode(("S2001:Hoani's String\n").encode('utf-8'))
+    (_, [result]) = self.codec.decode(("S2001:486f616e69277320537472696e67\n").encode('utf-8'))
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)
@@ -214,27 +214,6 @@ class TestSetPayloadDecodeSingle():
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)
 
-  def test_simple_u64(self):
-    expected = packet.Packet("set", "typecheck/uint64", tuple([0x10223400000078]))
-    (_, [result]) = self.codec.decode(("S2006:0010223400000078\n").encode('utf-8'))
-    assert(result.category == expected.category)
-    assert(result.paths == expected.paths)
-    assert(result.payloads == expected.payloads)
-
-  def test_underflow_u64(self):
-    expected = packet.Packet("set", "typecheck/uint64", tuple([0x0]))
-    (_, [result]) = self.codec.decode(("S2006:-10223400000078\n").encode('utf-8'))
-    assert(result.category == expected.category)
-    assert(result.paths == expected.paths)
-    assert(result.payloads == expected.payloads)
-
-  def test_overflow_u64(self):
-    expected = packet.Packet("set", "typecheck/uint64", tuple([0xffffffffffffffff]))
-    (_, [result]) = self.codec.decode(("S2006:10000010223400000078\n").encode('utf-8'))
-    assert(result.category == expected.category)
-    assert(result.paths == expected.paths)
-    assert(result.payloads == expected.payloads)
-
   def test_simple_i8(self):
     expected = packet.Packet("set", "typecheck/int8", tuple([0x11]))
     (_, [result]) = self.codec.decode(("S2007:11\n").encode('utf-8'))
@@ -273,20 +252,6 @@ class TestSetPayloadDecodeSingle():
   def test_signed_i32(self):
     expected = packet.Packet("set", "typecheck/int32", tuple([-0x102234]))
     (_, [result]) = self.codec.decode(("S2009:ffefddcc\n").encode('utf-8'))
-    assert(result.category == expected.category)
-    assert(result.paths == expected.paths)
-    assert(result.payloads == expected.payloads)
-
-  def test_simple_i64(self):
-    expected = packet.Packet("set", "typecheck/int64", tuple([0x10223400000078]))
-    (_, [result]) = self.codec.decode(("S200a:0010223400000078\n").encode('utf-8'))
-    assert(result.category == expected.category)
-    assert(result.paths == expected.paths)
-    assert(result.payloads == expected.payloads)
-
-  def test_signed_i64(self):
-    expected = packet.Packet("set", "typecheck/int64", tuple([-0x10223400000078]))
-    (_, [result]) = self.codec.decode(("S200a:ffefddcbffffff88\n").encode('utf-8'))
     assert(result.category == expected.category)
     assert(result.paths == expected.paths)
     assert(result.payloads == expected.payloads)

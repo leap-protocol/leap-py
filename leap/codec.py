@@ -1,5 +1,10 @@
-# RoBus Codec
-# 2019 (C) Hoani Bryson
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Codec
+#
+# L3aP codec for encoding and decoding packets
+#
 
 from . import packet
 from .helpers import typeHelper, explore, protocolKey, itemData, verify

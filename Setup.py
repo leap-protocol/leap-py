@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="leap-protocol",
-    version="1.0.0",
+    version="1.0.1",
     author="Hoani Bryson",
     author_email="hoani.bryson@gmail.com",
     description="Legible Encoding for Addressable Packets",

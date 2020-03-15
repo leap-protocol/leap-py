@@ -1,3 +1,11 @@
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Main
+#
+# L3aP Command Line Interface
+#
+
 
 if __name__ == "__main__":
   import argparse, sys

@@ -117,7 +117,7 @@ class TestSetPacketEncodeMultiple():
     assert(result == expected)
 
   def test_non_sequential(self):
-    expected = ("S0000:12:34:0567:Hoani\n").encode('utf-8')
+    expected = ("S0000:12:34:0567:486f616e69\n").encode('utf-8')
     _packet = packet.Packet("set", "protocol", tuple([0x12, 0x34, 0x567, "Hoani"]))
     result = self.codec.encode(_packet)
     assert(result == expected)
@@ -141,7 +141,7 @@ class TestSetPacketEncodeSingle():
     self.codec = codec.Codec(protocol_file_path)
 
   def test_simple_string(self):
-    expected = ("S2001:Hoani's String\n").encode('utf-8')
+    expected = ("S2001:486f616e69277320537472696e67\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/string", tuple(["Hoani's String"]))
     result = self.codec.encode(_packet)
     assert(result == expected)
@@ -203,24 +203,6 @@ class TestSetPacketEncodeSingle():
   def test_overflow_u32(self):
     expected = ("S2005:ffffffff\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/uint32", tuple([0x100002234]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_simple_u64(self):
-    expected = ("S2006:0010223400000078\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/uint64", tuple([0x10223400000078]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_underflow_u64(self):
-    expected = ("S2006:0000000000000000\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/uint64", tuple([-0x10223400000078]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_overflow_u64(self):
-    expected = ("S2006:ffffffffffffffff\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/uint64", tuple([0x10000010223400000078]))
     result = self.codec.encode(_packet)
     assert(result == expected)
 
@@ -293,30 +275,6 @@ class TestSetPacketEncodeSingle():
   def test_underflow_i32(self):
     expected = ("S2009:80000000\n").encode('utf-8')
     _packet = packet.Packet("set", "typecheck/int32", tuple([-0x1FF0000000]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_simple_i64(self):
-    expected = ("S200a:0010223400000078\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/int64", tuple([0x10223400000078]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_signed_i64(self):
-    expected = ("S200a:ffefddcbffffff88\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/int64", tuple([-0x10223400000078]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_overflow_i64(self):
-    expected = ("S200a:7fffffffffffffff\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/int64", tuple([0x1ffffffffffffffff0]))
-    result = self.codec.encode(_packet)
-    assert(result == expected)
-
-  def test_underflow_i64(self):
-    expected = ("S200a:8000000000000000\n").encode('utf-8')
-    _packet = packet.Packet("set", "typecheck/int64", tuple([-0x1FF000000000000000]))
     result = self.codec.encode(_packet)
     assert(result == expected)
 

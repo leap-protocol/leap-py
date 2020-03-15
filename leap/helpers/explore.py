@@ -1,3 +1,12 @@
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Explore
+#
+# Exploration functions for breaking protocol data into indexable data
+#
+
+
 from . import protocolKey
 
 def count_depth(root):

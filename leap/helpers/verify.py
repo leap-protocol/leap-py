@@ -1,3 +1,11 @@
+# Copyright © 2020 Hoani Bryson
+# License: MIT (https://mit-license.org/)
+#
+# Verify
+#
+# Verifies correctness of L3ap protocol configuration files
+#
+
 import re, json, toml
 from . import protocolKey
 
